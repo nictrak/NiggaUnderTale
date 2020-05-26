@@ -51,6 +51,7 @@ module DamageCalculator(
     end
     
     always @(posedge clk) begin
+        if(isComplete) isComplete = 0;
         if(isRun) begin
             if(isCollide) begin
                 //TODO color check before add damge
