@@ -26,22 +26,28 @@ module bulletEnvTest(
     //implement clock
     reg clk;
     always
- #5 clk=~clk;
+    #5 clk=~clk;
     
-    wire [31:0] state;
-    wire [15:0] position;
-    wire [15:0] size;
-    wire [2:0] color;
-    wire isRender;
-    wire [2:0] index;
-    Bullet b(state,position,size,color,isRender,index,clk);
+    wire [15:0] position1;
+    wire [15:0] size1;
+    wire [2:0] color1;
+    wire isRender1;
+    wire [2:0] index1;
+
+    wire [15:0] position2;
+    wire [15:0] size2;
+    wire [2:0] color2;
+    wire isRender2;
+    wire [2:0] index2;
+    
+    Bullet b(position1,size1,color1,isRender1,position2,size2,color2,isRender2,index1,index2,clk);
     
     wire [7:0] damage;
     wire isComplete;
     reg isCollide;
     reg isMove;
     reg start;
-    DamageCalculator dmc(damage, isComplete, index, isCollide, isMove, color ,start, clk);
+    DamageCalculator dmc(damage, isComplete, index1, isCollide, isMove, color ,start, clk);
     
     initial
     begin

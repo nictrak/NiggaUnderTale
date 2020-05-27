@@ -21,47 +21,43 @@
 
 
 module Bullet(
-    output [31:0] state,
-    output [15:0] position,
-    output [15:0] size,
-    output [2:0] color,
-    output isRender,
-    input [3:0] index,
+    output wire[15:0] position1,
+    output wire[15:0] size1,
+    output wire[2:0] color1,
+    output wire isRender1,
+    output wire[15:0] position2,
+    output wire[15:0] size2,
+    output wire[2:0] color2,
+    output wire isRender2,
+    input wire[2:0] index1,
+    input wire[2:0] index2,
     input clk
 
     );
-    reg [63:0] mem [7:0];
+    reg [63:0] mem [0:7];
     
-    wire [31:0] state;
     
-    reg [7:0] x;
-    reg [7:0] y;
-    wire [15:0] position;
-    assign position [15:8] = x;
-    assign position [7:0] = y;
+    assign position1 [15:8] = mem[index1][15:8];
+    assign position1 [7:0] = mem[index1][7:0];
+    assign size1 [15:8] = mem[index1][23:16];
+    assign size1 [7:0] = mem[index1][31:24];
+    assign color1 = mem[index1][33:32];
+    assign isRender1 = mem[index1][34];
     
-    reg [7:0] xsize;
-    reg [7:0] ysize;
-    wire [15:0] size;
-    assign size [15:8] = xsize;
-    assign size [7:0] = ysize;
-    
-    reg [2:0] color;
-    reg isRender;
-    
+    assign position2 [15:8] = mem[index2][15:8];
+    assign position2 [7:0] = mem[index2][7:0];
+    assign size2 [15:8] = mem[index2][23:16];
+    assign size2 [7:0] = mem[index2][31:24];
+    assign color2 = mem[index2][33:32];
+    assign isRender2 = mem[index2][34];
+        
     always @(posedge clk)
     begin
-    x = mem[index][15:8];
-    y = mem[index][7:0];
-    xsize = mem[index][23:16];
-    ysize = mem[index][31:24];
-    color = mem[index][33:32];
-    isRender = mem[index][34];
     end
     
     initial
     begin
-    mem[1] = 64'b0000000000000000000000000000010111110000000011110101010110101010; 
+    mem[1] = 64'b00000000_00000000_00000000_00000101_11110000_00001111_01010101_10101010; 
     end
     
     
