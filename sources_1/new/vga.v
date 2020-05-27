@@ -21,8 +21,7 @@
 module vga_sync
 	(
 		input wire clk, reset,
-		input wire [19:0] C,
-		output wire hsync, vsync, video_on, p_tick,
+		output wire hsync, vsync, p_tick,
 		output wire [9:0] x, y
 	);
 	
@@ -64,7 +63,6 @@ module vga_sync
 	
 	// register to keep track of vsync and hsync signal states
 	reg vsync_reg, hsync_reg;
-	reg video;
 	wire vsync_next, hsync_next;
  
 	// infer registers
@@ -106,14 +104,6 @@ module vga_sync
                             && v_count_reg <= END_V_RETRACE;
 
         // video only on when pixels are in both horizontal and vertical display region
-        assign video_on = video;
-        always @(posedge clk) begin
-            if(h_count_reg < H_DISPLAY && v_count_reg < V_DISPLAY) begin
-                if(((h_count_reg-C[9:0])*(h_count_reg-C[9:0])+(v_count_reg-C[19:10])*(v_count_reg-C[19:10])) <= 10000)
-                    video = 1;
-                else video = 0;
-            end
-        end
         // output signals
         assign hsync  = hsync_reg;
         assign vsync  = vsync_reg;
@@ -125,40 +115,69 @@ endmodule
 module vga_test
 	(
 		input wire clk,
-		input wire [11:0] sw,
-		input wire [19:0] C,
-		input wire [1:0] color,
+		input wire isRender,
+		input wire [15:0] playerPos,
+		input wire [15:0] bulletPos,
+		input wire [1:0] bulletColor,
+		input wire [31:0] state,
 		output wire hsync, vsync,
-		output wire [11:0] rgb
+		output wire [11:0] rgb,
+		output wire [2:0] index
 	);
 
 	parameter WIDTH = 640;
 	parameter HEIGHT = 480;
+	parameter PLAYAREAX = 320;
+	parameter PLAYAREAY = 240;
+	parameter POSX = 320;
+	parameter POSY = 240;
 		
 	// register for Basys 2 8-bit RGB DAC 
 	reg [11:0] rgb_reg;
 	reg reset = 0;
+	reg [3:0] heartX, heartY;
 	wire [9:0] x, y;
+	wire [11:0] heartRGB;
 
 	// video status output from vga_sync to tell when to route out rgb signal to DAC
-	wire video_on;
     wire p_tick;
 	// instantiate vga_sync
-	vga_sync vga_sync_unit (.clk(clk), .reset(reset), .C(C), .hsync(hsync), .vsync(vsync), .video_on(video_on), .p_tick(p_tick), .x(x), .y(y));
-
+	vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(hsync), .vsync(vsync), .p_tick(p_tick), .x(x), .y(y));
+    heart player (.clk(clk), .x(heartX), .y(heartY), .rgb_reg(heartRGB));
+    
 	always @(posedge clk) begin
         if (reset)
             rgb_reg <= 0;
         else
-            case(color)
-                2'b00: rgb_reg <= 12'b111111111111;
-                2'b01: rgb_reg <= 12'b000011111111;
-                2'b10: rgb_reg <= 12'b111100001111;
-                2'b11: rgb_reg <= 12'b111111110000;
-            endcase
+            //generic circle
+//            if(((x-C[9:0])*(x-C[9:0])+(y-C[19:10])*(y-C[19:10])) <= 10000)
+//                    video = 1;
+            //play area
+            if((x>=PLAYAREAX-103 && x<=PLAYAREAX-100 && y>=PLAYAREAY-103 && y<=PLAYAREAY+103) ||
+                (x>=PLAYAREAX+100 && x<=PLAYAREAX+103 && y>=PLAYAREAY-103 && y<=PLAYAREAY+103) ||
+                (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY-103 && y<=PLAYAREAY-100) ||
+                (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY+100 && y<=PLAYAREAY+103))
+                    rgb_reg <= 12'b111111111111;
+            //heart
+            else if(x>=POSX-8 && x<=POSX+8 && y>=POSY-8 && y<=POSY+8)
+                begin
+                    heartX = (x-(POSX-8));
+                    heartY = (y-(POSY-8));
+                    rgb_reg = heartRGB; 
+                end
+            
+            else rgb_reg <= 12'b000000000000;
+            //hp bar
+            
+//            case(color)
+//                2'b00: rgb_reg <= 12'b111111111111;
+//                2'b01: rgb_reg <= 12'b000011111111;
+//                2'b10: rgb_reg <= 12'b111100001111;
+//                2'b11: rgb_reg <= 12'b111111110000;
+//            endcase
     end
 	        
 //	output
-	assign rgb = (video_on) ? rgb_reg : 12'b0;
+	assign rgb = rgb_reg;
 endmodule
 

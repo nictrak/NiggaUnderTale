@@ -34,15 +34,23 @@ wire [1:0] cl;
 //    cX = 600;
 //    cY = 100;
 //end
-    
+reg [15:0] playerPos = 16'b0;
+reg [15:0] bulletPos = 16'b0;
+reg [2:0] bulletColor = 3'b0;
+reg [31:0] state = 32'b0;
+reg isRender = 1;
+wire [2:0] index = 3'b0;
 vga_test vga(
-    .clk(clk), 
-    .sw(sw),
-    .C({cX, cY}),
-    .color(cl),
+    .clk(clk),
+    .isRender(isRender), 
+    .playerPos(playerPos),
+    .bulletPos(bulletPos),
+    .bulletColor(bulletColor),
+    .state(state),
     .hsync(Hsync),
     .vsync(Vsync),
-    .rgb({vgaRed, vgaGreen, vgaBlue})
+    .rgb({vgaRed, vgaGreen, vgaBlue}),
+    .index(index)
 );
 
 uart_echo u2(
