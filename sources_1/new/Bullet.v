@@ -23,7 +23,7 @@
 module Bullet(
     output wire[15:0] position1,
     output wire[15:0] size1,
-    output wire[2:0] color1,
+    output wire[2:0] color1, //000 = white , 001 = green , 010 = blue
     output wire isRender1,
     output wire[15:0] position2,
     output wire[15:0] size2,
@@ -57,7 +57,9 @@ module Bullet(
     
     initial
     begin
-    mem[1] = 64'b00000000_00000000_00000000_00000101_11110000_00001111_01010101_10101010; 
+    mem[1] = 64'b00000000_00000000_00000000_00000000_01010000_01010000_00000100_00000100; //test
+    mem[2] = 64'b00000000_00000000_00000000_00000001_01010000_01010000_00000100_00000100; //test
+    mem[3] = 64'b00000000_00000000_00000000_00000010_01010000_01010000_00000100_00000100; //test
     end
     
     

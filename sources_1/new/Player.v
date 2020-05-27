@@ -27,7 +27,8 @@ module Player(
     input [15:0] instruction,
     input clk,
     output [7:0] HP,
-    output [7:0] ATK
+    output [7:0] ATK,
+    output [7:0] size
 
     );
     
@@ -44,7 +45,7 @@ module Player(
     reg [7:0] HP;
     reg [7:0] ATK;
     wire [7:0] movementSpeed = 4;
-    wire [7:0]size = 10;
+    reg [7:0] size = 10;
    
     
     
