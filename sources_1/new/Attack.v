@@ -40,7 +40,7 @@ module Attack(
     reg [7:0] atkCon;
     reg [7:0] ATK = 10;
     
-    reg pass;
+    reg pass; //pass is 0 when attack phase is rendering.
     
     always @(posedge clk)
     begin

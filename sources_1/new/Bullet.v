@@ -23,7 +23,7 @@
 module Bullet(
     output wire[15:0] position1,
     output wire[15:0] size1,
-    output wire[2:0] color1,
+    output wire[2:0] color1, //000 = white , 001 = green , 010 = blue
     output wire isRender1,
     output wire[15:0] position2,
     output wire[15:0] size2,
@@ -41,15 +41,15 @@ module Bullet(
     assign position1 [7:0] = mem[index1][7:0];
     assign size1 [15:8] = mem[index1][23:16];
     assign size1 [7:0] = mem[index1][31:24];
-    assign color1 = mem[index1][33:32];
-    assign isRender1 = mem[index1][34];
+    assign color1 = mem[index1][34:32];
+    assign isRender1 = mem[index1][35];
     
     assign position2 [15:8] = mem[index2][15:8];
     assign position2 [7:0] = mem[index2][7:0];
     assign size2 [15:8] = mem[index2][23:16];
     assign size2 [7:0] = mem[index2][31:24];
-    assign color2 = mem[index2][33:32];
-    assign isRender2 = mem[index2][34];
+    assign color2 = mem[index2][34:32];
+    assign isRender2 = mem[index2][35];
         
     always @(posedge clk)
     begin
@@ -57,7 +57,9 @@ module Bullet(
     
     initial
     begin
-    mem[1] = 64'b00000000_00000000_00000000_00000101_11110000_00001111_01010101_10101010; 
+    mem[1] = 64'b00000000_00000000_00000000_00000000_01010000_01010000_00000100_00000100; //test
+    mem[2] = 64'b00000000_00000000_00000000_00000001_01010000_01010000_00000100_00000100; //test
+    mem[3] = 64'b00000000_00000000_00000000_00000010_01010000_01010000_00000100_00000100; //test
     end
     
     
