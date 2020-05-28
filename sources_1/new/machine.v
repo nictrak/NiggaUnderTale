@@ -25,10 +25,14 @@ module Machine(
     output reg[15:0] playerInstruction,
     output reg isMove,
     output reg[7:0] monHP,
+    output reg startDmg,
     input wire[3:0] keyboard,
     input wire isDeath,
     input wire atkPass,
     input wire[7:0] dmgMon,
+    input wire isDmgComplete,
+    input wire[7:0] damage,
+    input wire heal,
     input wire clk
     );
     
@@ -96,10 +100,13 @@ module Machine(
                 end
             end
             DODGE: begin
-                if (isDeath === 1) begin
+                if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
                 end
-                else begin
+                else if(isDmgComplete && (heal || damage >= 0)) begin
+                    if(heal) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
+                    else playerInstruction = {DPY, damage, ZERO};
+                end else begin
                     if(keyboard >= 0) isMove = 1; 
                     case(keyboard)
                         W: playerInstruction = {MOV, UP, ZERO};
