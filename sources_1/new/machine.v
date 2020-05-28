@@ -21,13 +21,11 @@
 
 
 module Machine(
-    output wire[7:0] nextState,
+    output reg[7:0] state,
     output reg[15:0] playerInstruction,
     output reg isMove,
     output reg[7:0] monHP,
-    input wire[7:0] state,
     input wire[3:0] keyboard,
-    input wire[3:0] menu,
     input wire isDeath,
     input wire atkPass,
     input wire[7:0] dmgMon,
@@ -69,35 +67,30 @@ module Machine(
     assign page = state[7:4];
     assign substage = state[3:0];
     
-    reg[3:0] nextPage;
-    reg[3:0] nextSubstage;
-    assign nextStage = {nextPage, nextSubstage};
+    reg[7:0] nextState;
+
     
     
     initial begin
-        nextPage = ZERO;
-        nextSubstage = ZERO;
+        state = {MENU, ZERO};
+        nextState = {MENU, ZERO};
     end
     
     always @(posedge clk) begin
-        nextPage = page;
-        nextSubstage = substage;
+        nextState = state;
         case(page)
             default: begin
-                nextPage = MENU;
-                nextSubstage = ZERO;
+                nextState = {MENU, ZERO};
             end
             MENU: begin
                 if(keyboard === SPACE) begin
-                    nextPage = DODGE;
-                    nextSubstage = ZERO;
+                    nextState = {DODGE, ZERO};
                     monHP = 0;
                 end
             end
             DODGE: begin
                 if (isDeath === 1) begin
-                         nextPage = MENU;
-                         nextSubstage = ZERO;
+                         nextState = {MENU, ZERO};
                 end
                 else begin
                     case(keyboard)
@@ -116,17 +109,14 @@ module Machine(
                 if (atkPass === 1) begin
                     monHP = monHP + dmgMon;
                     if (monHP > 100) begin
-                         nextPage = MENU;
-                         nextSubstage = ZERO;
+                         nextState = {MENU, ZERO};
                     end
                     else begin
-                        nextPage = DODGE;
-                        nextSubstage = ZERO;
+                        nextState = {DODGE, ZERO};
                     end
                 end
             end
-            
-            
         endcase
+        state = nextState;
      end
 endmodule 
