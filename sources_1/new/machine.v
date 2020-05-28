@@ -28,6 +28,8 @@ module Machine(
     input wire[3:0] keyboard,
     input wire[3:0] menu,
     input wire isDeath,
+    input wire atkPass,
+    input wire[7:0] dmgMon,
     input wire clk
     );
     
@@ -72,6 +74,8 @@ module Machine(
     
     reg[7:0] direction;
     
+    reg[7:0] monHP;
+    
     initial begin
         nextPage = ZERO;
         nextSubstage = ZERO;
@@ -89,6 +93,7 @@ module Machine(
                 if(keyboard === SPACE) begin
                     nextPage = DODGE;
                     nextSubstage = ZERO;
+                    monHP = 0;
                 end
             end
             DODGE: begin
@@ -103,6 +108,25 @@ module Machine(
             end
             ACTION: begin
             end
+            ATTACK: begin
+                if (atkPass === 1) begin
+                    monHP = monHP + dmgMon;
+                    if (monHP > 100) begin
+                         nextPage = MENU;
+                         nextSubstage = ZERO;
+                    end
+                    else if (isDeath === 1) begin
+                         nextPage = MENU;
+                         nextSubstage = ZERO;
+                    end
+                    else begin
+                        nextPage = DODGE;
+                        nextSubstage = ZERO;
+                    end
+                end
+            end
+            
+            
         endcase
      end
 endmodule 
