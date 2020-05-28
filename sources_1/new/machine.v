@@ -24,6 +24,7 @@ module Machine(
     output wire[7:0] nextState,
     output reg[15:0] playerInstruction,
     output reg isMove,
+    output reg[7:0] monHP,
     input wire[7:0] state,
     input wire[3:0] keyboard,
     input wire[3:0] menu,
@@ -74,8 +75,6 @@ module Machine(
     
     reg[7:0] direction;
     
-    reg[7:0] monHP;
-    
     initial begin
         nextPage = ZERO;
         nextSubstage = ZERO;
@@ -97,14 +96,20 @@ module Machine(
                 end
             end
             DODGE: begin
-                case(keyboard)
-                    W: direction = UP;
-                    A: direction = RIGHT;
-                    S: direction = DOWN;
-                    D: direction = LEFT;
-                    default: direction = UP;
-                endcase
-                playerInstruction = {MOV, direction, ZERO};
+                if (isDeath === 1) begin
+                         nextPage = MENU;
+                         nextSubstage = ZERO;
+                end
+                else begin
+                    case(keyboard)
+                        W: direction = UP;
+                        A: direction = RIGHT;
+                        S: direction = DOWN;
+                        D: direction = LEFT;
+                        default: direction = UP;
+                    endcase
+                    playerInstruction = {MOV, direction, ZERO};
+                end
             end
             ACTION: begin
             end
@@ -112,10 +117,6 @@ module Machine(
                 if (atkPass === 1) begin
                     monHP = monHP + dmgMon;
                     if (monHP > 100) begin
-                         nextPage = MENU;
-                         nextSubstage = ZERO;
-                    end
-                    else if (isDeath === 1) begin
                          nextPage = MENU;
                          nextSubstage = ZERO;
                     end
