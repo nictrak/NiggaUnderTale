@@ -100,6 +100,7 @@ module uart_echo (/*AUTOARG*/
         tx_byte <= 8'h00;
         transmit <= 1'b0;
         rx_fifo_pop <= 1'b0;
+        up_reg <= 0;down_reg <= 0;left_reg <= 0;right_reg <= 0;atk_reg <= 0;j_reg <= 0;k_reg <= 0;l_reg <= 0;
      end else begin
         if (!rx_fifo_empty & !tx_fifo_full & !transmit /*& !is_transmitting*/) begin
 //           tx_byte <= (rx_byte-32);
@@ -139,7 +140,7 @@ module uart_echo (/*AUTOARG*/
                 default: 
                     begin 
                         tx_byte <= 0; 
-                        up_reg <= down_reg <= left_reg <= right_reg <= atk_reg <= j_reg <= k_reg <= 0;
+                        //up_reg <= down_reg <= left_reg <= right_reg <= atk_reg <= j_reg <= k_reg <= 0;
                     end
            endcase
            transmit <= 1'b1;
