@@ -21,23 +21,26 @@
 
 
 module Machine(
-    output reg[7:0] nextState,
-    output reg[3:0] playerInstructiuon,
+    output wire[7:0] nextState,
+    output reg[15:0] playerInstruction,
     output reg isMove,
+    output reg[7:0] monHP,
     input wire[7:0] state,
     input wire[3:0] keyboard,
     input wire[3:0] menu,
     input wire isDeath,
+    input wire atkPass,
+    input wire[7:0] dmgMon,
     input wire clk
     );
     
+    parameter ZERO = 4'b0000; // for IDLE
     //key enum
-    parameter IDLE = 4'b0000;
-    parameter UP = 4'b0001;
-    parameter LEFT = 4'b0010;
-    parameter DOWN = 4'b0011;
-    parameter RIGHT = 4'b0100;
-    parameter ENTER = 4'b0101;
+    parameter W = 4'b0001;
+    parameter D = 4'b0010;
+    parameter S = 4'b0011;
+    parameter A = 4'b0100;
+    parameter SPACE = 4'b0101;
     
     //page enum
     parameter NULL = 4'b0000; //blank screen do nothing
@@ -47,12 +50,83 @@ module Machine(
     parameter ATTACK = 4'b1010; //attack monster state
     parameter ACTION = 4'b1011; //choose action state
     
+    //op code
+    parameter HPY = 4'b0001;
+    parameter DPY = 4'b0010;
+    parameter IDG = 4'b0011;
+    parameter SDG = 4'b0100;
+    parameter MOV = 4'b0101;
+    parameter SHP = 4'b0110;
+    
+    //direction
+    parameter UP = 0;
+    parameter LEFT = 3;
+    parameter DOWN = 2;
+    parameter RIGHT = 1;
+    
     wire[3:0] page;
     wire[3:0] substage;
-    assign keyboard = state[7:4];
-    assign menuInp = state[3:0];
-    assign page = 0;
+    assign page = state[7:4];
+    assign substage = state[3:0];
+    
+    reg[3:0] nextPage;
+    reg[3:0] nextSubstage;
+    assign nextStage = {nextPage, nextSubstage};
     
     
+    initial begin
+        nextPage = ZERO;
+        nextSubstage = ZERO;
+    end
     
-endmodule
+    always @(posedge clk) begin
+        nextPage = page;
+        nextSubstage = substage;
+        case(page)
+            default: begin
+                nextPage = MENU;
+                nextSubstage = ZERO;
+            end
+            MENU: begin
+                if(keyboard === SPACE) begin
+                    nextPage = DODGE;
+                    nextSubstage = ZERO;
+                    monHP = 0;
+                end
+            end
+            DODGE: begin
+                if (isDeath === 1) begin
+                         nextPage = MENU;
+                         nextSubstage = ZERO;
+                end
+                else begin
+                    case(keyboard)
+                        W: playerInstruction = {MOV, UP, ZERO};
+                        A: playerInstruction = {MOV, LEFT, ZERO};
+                        S: playerInstruction = {MOV, DOWN, ZERO};
+                        D: playerInstruction = {MOV, RIGHT, ZERO};
+                        ZERO: playerInstruction = {ZERO, ZERO, ZERO, ZERO};
+                        default: playerInstruction = {ZERO, ZERO, ZERO, ZERO};
+                    endcase
+                end
+            end
+            ACTION: begin
+            end
+            ATTACK: begin
+                if (atkPass === 1) begin
+                    monHP = monHP + dmgMon;
+                    if (monHP > 100) begin
+                         nextPage = MENU;
+                         nextSubstage = ZERO;
+                    end
+                    else begin
+                        nextPage = DODGE;
+                        nextSubstage = ZERO;
+                    end
+                end
+            end
+            
+            
+        endcase
+     end
+endmodule 
