@@ -22,7 +22,7 @@
 
 module Machine(
     output wire[7:0] nextState,
-    output reg[3:0] playerInstructiuon,
+    output reg[15:0] playerInstruction,
     output reg isMove,
     input wire[7:0] state,
     input wire[3:0] keyboard,
@@ -55,6 +55,12 @@ module Machine(
     parameter MOV = 4'b0101;
     parameter SHP = 4'b0110;
     
+    //direction
+    parameter UP = 0;
+    parameter LEFT = 1;
+    parameter DOWN = 2;
+    parameter RIGHT = 3;
+    
     wire[3:0] page;
     wire[3:0] substage;
     assign page = state[7:4];
@@ -63,6 +69,8 @@ module Machine(
     reg[3:0] nextPage;
     reg[3:0] nextSubstage;
     assign nextStage = {nextPage, nextSubstage};
+    
+    reg[7:0] direction;
     
     initial begin
         nextPage = ZERO;
@@ -73,16 +81,28 @@ module Machine(
         nextPage = page;
         nextSubstage = substage;
         case(page)
+            default: begin
+                nextPage = MENU;
+                nextSubstage = ZERO;
+            end
             MENU: begin
                 if(keyboard === SPACE) begin
-                    nextPage = START;
+                    nextPage = DODGE;
                     nextSubstage = ZERO;
                 end
             end
-            START: begin
+            DODGE: begin
+                case(keyboard)
+                    W: direction = UP;
+                    A: direction = RIGHT;
+                    S: direction = DOWN;
+                    D: direction = LEFT;
+                    default: direction = UP;
+                endcase
+                playerInstruction = {MOV, direction, ZERO};
+            end
+            ACTION: begin
             end
         endcase
-    end    
-   
-    
-endmodule
+     end
+endmodule 
