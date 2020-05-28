@@ -35,9 +35,9 @@ module Machine(
     parameter ZERO = 4'b0000; // for IDLE
     //key enum
     parameter W = 4'b0001;
-    parameter S = 4'b0010;
-    parameter A = 4'b0011;
-    parameter D = 4'b0100;
+    parameter D = 4'b0010;
+    parameter S = 4'b0011;
+    parameter A = 4'b0100;
     parameter J = 4'b0101;
     parameter K = 4'b0110;
     parameter L = 4'b0111;
@@ -60,10 +60,10 @@ module Machine(
     parameter SHP = 4'b0110;
     
     //direction
-    parameter UP = 0;
-    parameter LEFT = 3;
-    parameter DOWN = 2;
-    parameter RIGHT = 1;
+    parameter UP = 8'b0000_0000;
+    parameter LEFT = 8'b0000_0011;
+    parameter DOWN = 8'b0000_0010;
+    parameter RIGHT = 8'b0000_0001;
     
     wire[3:0] page;
     wire[3:0] substage;
@@ -77,10 +77,14 @@ module Machine(
     initial begin
         state = {MENU, ZERO};
         nextState = {MENU, ZERO};
+        monHP = 0;
+        isMove = 0;
+        playerInstruction = {ZERO, ZERO, ZERO, ZERO};
     end
     
     always @(posedge clk) begin
         nextState = state;
+        isMove = 0;
         case(page)
             default: begin
                 nextState = {MENU, ZERO};
@@ -96,6 +100,7 @@ module Machine(
                          nextState = {MENU, ZERO};
                 end
                 else begin
+                    if(keyboard >= 0) isMove = 1; 
                     case(keyboard)
                         W: playerInstruction = {MOV, UP, ZERO};
                         A: playerInstruction = {MOV, LEFT, ZERO};

@@ -51,8 +51,16 @@ module instructionTest(
         keyboard = 0;
         atkPass = 0;
         dmgMon = 10;
-        #55 keyboard = 4'b0101;
+        #55 keyboard = 4'b1000;
+        #5 keyboard = 4'b0000;
+        #15 keyboard = 4'b0001;
+        #5 keyboard = 4'b0000;
+        #5 keyboard = 4'b0010;
         #5 keyboard = 4'b0000;  
+        #5 keyboard = 4'b0011;
+        #5 keyboard = 4'b0000;  
+        #5 keyboard = 4'b0100;
+        #5 keyboard = 4'b0000;      
         #1000 $finish;
     end
     
