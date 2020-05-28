@@ -23,12 +23,12 @@
 module Player(
     output [31:0]state,
     output [15:0]position,
+    output [7:0] size,
     output isDeath,
-    input [15:0] instruction,
-    input clk,
     output [7:0] HP,
     output [7:0] ATK,
-    output [7:0] size
+    input [15:0] instruction,
+    input clk
 
     );
     
@@ -45,7 +45,7 @@ module Player(
     reg [7:0] HP;
     reg [7:0] ATK;
     wire [7:0] movementSpeed = 4;
-    reg [7:0] size = 10;
+    wire [7:0]size = 10;
    
     
     
