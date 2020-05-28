@@ -60,9 +60,9 @@ module Machine(
     
     //direction
     parameter UP = 0;
-    parameter LEFT = 1;
+    parameter LEFT = 3;
     parameter DOWN = 2;
-    parameter RIGHT = 3;
+    parameter RIGHT = 1;
     
     wire[3:0] page;
     wire[3:0] substage;
@@ -73,7 +73,6 @@ module Machine(
     reg[3:0] nextSubstage;
     assign nextStage = {nextPage, nextSubstage};
     
-    reg[7:0] direction;
     
     initial begin
         nextPage = ZERO;
@@ -102,13 +101,13 @@ module Machine(
                 end
                 else begin
                     case(keyboard)
-                        W: direction = UP;
-                        A: direction = RIGHT;
-                        S: direction = DOWN;
-                        D: direction = LEFT;
-                        default: direction = UP;
+                        W: playerInstruction = {MOV, UP, ZERO};
+                        A: playerInstruction = {MOV, LEFT, ZERO};
+                        S: playerInstruction = {MOV, DOWN, ZERO};
+                        D: playerInstruction = {MOV, RIGHT, ZERO};
+                        ZERO: playerInstruction = {ZERO, ZERO, ZERO, ZERO};
+                        default: playerInstruction = {ZERO, ZERO, ZERO, ZERO};
                     endcase
-                    playerInstruction = {MOV, direction, ZERO};
                 end
             end
             ACTION: begin
