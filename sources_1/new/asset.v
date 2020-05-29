@@ -288,3 +288,16 @@ module heart(
         endcase
     end  
 endmodule
+
+module menu(
+    input wire clk,
+	input wire [8:0] x,
+	input wire [8:0] y,
+	output reg [11:0] rgb_reg
+    );
+    
+    always @(posedge clk) begin
+        case({y,x})
+        endcase
+    end  
+endmodule

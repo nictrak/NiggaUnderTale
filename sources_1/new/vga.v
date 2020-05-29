@@ -131,7 +131,6 @@ module vga_test
 	parameter PLAYAREAY = 240;
 	parameter HPX = 50;
 	parameter HPY = 360;
-	parameter HP = 100;
 	parameter SIZE = 8;
 	parameter BLUE = 50;
 	parameter SLIDE = 300;
@@ -200,27 +199,31 @@ module vga_test
                 else if(x>=POSX-BLUE && x<=POSX+BLUE && y>=POSY-BLUE && y<=POSY+BLUE && isRender && bulletColor==2)
                     rgb_reg <= 12'b000000001111;
                 //hp bar
-                else if(x>=HPX && x<=HPX+HP*3 && y>=HPY && y<=HPY+5)
+                else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY && y<=HPY+5)
                     rgb_reg <= 12'b111100000000;
-                else if(x>=HPX+300 && x<=HPX+303 && y>=HPY && y<=HPY+5)
+                else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY+7 && y<=HPY+12)
+                    rgb_reg <= 12'b111111110000;
+                else if(x>=HPX+300 && x<=HPX+302 && y>=HPY && y<=HPY+12)
                     rgb_reg <= 12'b111111111111;
                 else rgb_reg <= 12'b000000000000;
                 end
             else if(state[31:28]==4'b1010)
                 begin
                     //play area
-                    if((x>=PLAYAREAX-103 && x<=PLAYAREAX-100 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23) ||
-                    (x>=PLAYAREAX+100 && x<=PLAYAREAX+103 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23) ||
-                    (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY-23 && y<=PLAYAREAY-20) ||
-                    (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY+20 && y<=PLAYAREAY+23))
+                if((x>=PLAYAREAX-131 && x<=PLAYAREAX-128 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23) ||
+                    (x>=PLAYAREAX+128 && x<=PLAYAREAX+131 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23) ||
+                    (x>=PLAYAREAX-131 && x<=PLAYAREAX+131 && y>=PLAYAREAY-23 && y<=PLAYAREAY-20) ||
+                    (x>=PLAYAREAX-131 && x<=PLAYAREAX+131 && y>=PLAYAREAY+20 && y<=PLAYAREAY+23))
                         rgb_reg <= 12'b111111111111;
                     //hp bar
-                    else if(x>=HPX && x<=HPX+HP*3 && y>=HPY && y<=HPY+5)
-                        rgb_reg <= 12'b111100000000;
-                    else if(x>=HPX+300 && x<=HPX+303 && y>=HPY && y<=HPY+5)
-                        rgb_reg <= 12'b111111111111;
+                else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY && y<=HPY+5)
+                    rgb_reg <= 12'b111100000000;
+                else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY+7 && y<=HPY+12)
+                    rgb_reg <= 12'b111111110000;
+                else if(x>=HPX+300 && x<=HPX+302 && y>=HPY && y<=HPY+12)
+                    rgb_reg <= 12'b111111111111;
                     //slider
-                    else if(x>=SLIDE-1 && x<=SLIDE+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23)
+                    else if(x>=PLAYAREAX-128+state[7:0]-1 && x<=PLAYAREAX-128+state[7:0]+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23)
                         rgb_reg <= 12'b111111111111;
                     //slider help
                     else if(x>=PLAYAREAX-1 && x<=PLAYAREAX+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY-18)
