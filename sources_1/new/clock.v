@@ -20,15 +20,19 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module clockDiv(
+module clock(
 output clk_1hz,
 output clk_10hz,
+output clk_20hz,
+output clk_40hz,
 input clk
 );
     wire [27:0] tclk;
     assign tclk[0]=clk;
     assign clk_1hz=tclk[27];
     assign clk_10hz=tclk[23];
+    assign clk_20hz=tclk[22];
+    assign clk_40hz=tclk[21];
     genvar c;
     generate for(c=0; c<27; c=c+1)
         begin
@@ -38,7 +42,7 @@ input clk
     
 endmodule
 
-/*module clockDiv(
+module clockDiv(
     output clkDiv,
     input clk
     );
@@ -51,7 +55,7 @@ endmodule
     begin
         clkDiv=~clkDiv;
     end
-endmodule8/
+endmodule
 
 //module counter10(
 //output clk10,

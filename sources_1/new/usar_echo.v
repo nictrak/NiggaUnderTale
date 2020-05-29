@@ -95,6 +95,7 @@ module uart_echo (/*AUTOARG*/
    // and send it back as the transmit byte, signal transmit and pop the byte from
    // the receive FIFO.
    //
+   
    always @(posedge CLK)
      if (RESET) begin
         tx_byte <= 8'h00;
@@ -140,7 +141,7 @@ module uart_echo (/*AUTOARG*/
                 default: 
                     begin 
                         tx_byte <= 0; 
-                        //up_reg <= down_reg <= left_reg <= right_reg <= atk_reg <= j_reg <= k_reg <= 0;
+                        up_reg <= down_reg <= left_reg <= right_reg <= atk_reg <= j_reg <= k_reg <= 0;
                     end
            endcase
            transmit <= 1'b1;

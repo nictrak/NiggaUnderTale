@@ -35,8 +35,10 @@ module Player(
     reg [7:0] x;
     reg [7:0] y;
     wire [15:0] position;
-    assign position[7:0] = y;
-    assign position[15:8] = x;
+    assign position[7:0] = ry;
+    assign position[15:8] = rx;
+    wire [7:0] rx = x - movementSpeed;
+    wire [7:0] ry = y - movementSpeed;
     
     wire [31:0] state;
     assign state[15:0] = position;
@@ -44,31 +46,31 @@ module Player(
     reg isDeath;
     reg [7:0] HP;
     reg [7:0] ATK;
-    wire [7:0] movementSpeed = 4;
-    wire [7:0]size = 10;
+    wire [7:0] movementSpeed = 10;
+    wire [7:0]size = 16;
    
     always@(posedge clk_10hz) begin
         if(instruction[15:12] == 4'b0101) begin
             case(instruction[11:4])
-                    0 : 
+                    1 : 
                         begin
                         x = x-movementSpeed;
                         if(x<0+size/2+movementSpeed) x=0+size/2+movementSpeed;
-                        end
-                    1 : 
+                       end
+                    0 : 
                         begin
                         y = y-movementSpeed;
                         if(y<0+size/2+movementSpeed) y=0+size/2+movementSpeed;
                         end
-                    2 : 
-                        begin
-                        x = x+movementSpeed;
-                        if(x>200-size/2) x=200-size/2;
-                        end
                     3 : 
                         begin
+                        x = x+movementSpeed;
+                        if(x>200-size/2+movementSpeed) x=200-size/2+movementSpeed;
+                        end
+                    2 : 
+                        begin
                         y = y+movementSpeed;
-                        if(y>200-size/2) y=200-size/2;
+                        if(y>200-size/2+movementSpeed) y=200-size/2+movementSpeed;
                         end
             endcase
         end
@@ -111,8 +113,8 @@ module Player(
     begin
     HP = 100;
     ATK = 10;
-    x=14;
-    y=14;
+    x=100;
+    y=100;
     end
                       
           
