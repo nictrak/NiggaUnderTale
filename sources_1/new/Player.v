@@ -45,7 +45,7 @@ module Player(
     reg [7:0] HP;
     reg [7:0] ATK;
     wire [7:0] movementSpeed = 4;
-    wire [7:0]size = 10;
+    wire [7:0]size = 16;
    
     always@(posedge clk_10hz) begin
         if(instruction[15:12] == 4'b0101) begin

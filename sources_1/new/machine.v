@@ -26,7 +26,7 @@ module Machine(
     output reg isMove,
     output reg[7:0] monHP,
     output reg startDmg,
-    input wire[3:0] keyboard,
+    input wire[7:0] keyboard,
     input wire isDeath,
     input wire atkPass,
     input wire[7:0] dmgMon,
@@ -65,9 +65,9 @@ module Machine(
     
     //direction
     parameter UP = 8'b0000_0000;
-    parameter LEFT = 8'b0000_0011;
+    parameter LEFT = 8'b0000_0001;
     parameter DOWN = 8'b0000_0010;
-    parameter RIGHT = 8'b0000_0001;
+    parameter RIGHT = 8'b0000_0011;
     
     wire[3:0] page;
     wire[3:0] substage;
@@ -75,12 +75,15 @@ module Machine(
     assign substage = state[3:0];
     
     reg[7:0] nextState;
+    
+    wire [3:0] key; 
+    keyConverter(key,keyboard,clk);
 
     
     
     initial begin
-        state = {MENU, ZERO};
-        nextState = {MENU, ZERO};
+        state = {DODGE, ZERO};
+        nextState = {DODGE, ZERO};
         monHP = 0;
         isMove = 0;
         playerInstruction = {ZERO, ZERO, ZERO, ZERO};
@@ -94,7 +97,7 @@ module Machine(
                 nextState = {MENU, ZERO};
             end
             MENU: begin
-                if(keyboard === SPACE) begin
+                if(key === SPACE) begin
                     nextState = {DODGE, ZERO};
                     monHP = 0;
                 end
@@ -107,8 +110,8 @@ module Machine(
                     if(heal) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
                     else playerInstruction = {DPY, damage, ZERO};
                 end else begin
-                    if(keyboard >= 0) isMove = 1; 
-                    case(keyboard)
+                    if(key >= 0) isMove = 1; 
+                    case(key)
                         W: playerInstruction = {MOV, UP, ZERO};
                         A: playerInstruction = {MOV, LEFT, ZERO};
                         S: playerInstruction = {MOV, DOWN, ZERO};

@@ -129,8 +129,13 @@ module vga_test
 	parameter HEIGHT = 480;
 	parameter PLAYAREAX = 320;
 	parameter PLAYAREAY = 240;
-	parameter POSX = 320;
-	parameter POSY = 240;
+	//parameter POSX = 320;
+	//parameter POSY = 240;
+	
+	wire [9:0] POSX;
+	assign POSX = playerPos[15:8]+220;
+	wire [9:0] POSY;
+	assign POSY = playerPos[7:0]+140;
 		
 	// register for Basys 2 8-bit RGB DAC 
 	reg [11:0] rgb_reg;

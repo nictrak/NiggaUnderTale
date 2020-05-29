@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module clockDiv(
+module clock(
 output clk_1hz,
 output clk_10hz,
 input clk
@@ -38,7 +38,7 @@ input clk
     
 endmodule
 
-/*module clockDiv(
+module clockDiv(
     output clkDiv,
     input clk
     );
@@ -51,7 +51,7 @@ endmodule
     begin
         clkDiv=~clkDiv;
     end
-endmodule8/
+endmodule
 
 //module counter10(
 //output clk10,
