@@ -34,10 +34,10 @@ wire [1:0] cl;
 //    cX = 600;
 //    cY = 100;
 //end
-reg [15:0] playerPos = 16'b0;
+wire [15:0] playerPos;
 reg [15:0] bulletPos = 16'b0;
 reg [2:0] bulletColor = 3'b0;
-reg [31:0] state = 32'b0;
+reg [31:0] state = 32'b10010000000000000000000000000000;
 reg isRender = 1;
 wire [2:0] index = 3'b0;
 vga_test vga(
@@ -53,9 +53,32 @@ vga_test vga(
     .index(index)
 );
 
+//wire clk_1hz;
+//wire clk_10hz;
+//clockDiv(clk_1hz,clk_10hz,clk);
+
+//wire [15:0] playerInstruction;
+//Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz);
+
+
+    wire [7:0] mstate;
+    wire isMove;
+    wire[7:0] monHP;
+    wire startDmg;
+    wire[7:0] key;
+    wire isDeath;
+    wire atkPass;
+    wire[7:0] dmgMon;
+    wire isDmgComplete;
+    wire[7:0] damage;
+    wire heal;
+
+//Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isDmgComplete,damage,heal,clk);
+
+
 uart_echo u2(
 .TX(RsTx),
-.cX(cY),.cY(cX),.cl(cl),
+.keys(key),
 .CLK(clk),
 .RESET(reset),
 .RX(RsRx)

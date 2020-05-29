@@ -122,52 +122,111 @@ module vga_test
 		input wire [31:0] state,
 		output wire hsync, vsync,
 		output wire [11:0] rgb,
-		output wire [2:0] index
+		output reg [2:0] index
 	);
 
 	parameter WIDTH = 640;
 	parameter HEIGHT = 480;
 	parameter PLAYAREAX = 320;
 	parameter PLAYAREAY = 240;
-	parameter POSX = 320;
-	parameter POSY = 240;
+	parameter HPX = 50;
+	parameter HPY = 360;
+	parameter HP = 100;
+	parameter SIZE = 8;
+	parameter BLUE = 50;
+	parameter SLIDE = 300;
 		
 	// register for Basys 2 8-bit RGB DAC 
 	reg [11:0] rgb_reg;
 	reg reset = 0;
-	reg [3:0] heartX, heartY;
+	reg [8:0] menuX, menuY;
+	reg [7:0] bulletSize;
 	wire [9:0] x, y;
 	wire [11:0] heartRGB;
+	wire [11:0] menuRGB;
+	wire[9:0] POSX, POSY, BPOSX, BPOSY;
+	wire [3:0] heartX, heartY;
+	
+	assign POSX = playerPos[15:8]+220;
+	assign POSY = playerPos[7:0]+140;
+	assign BPOSX = bulletPos[15:8]+220;
+	assign BPOSY = bulletPos[7:0]+140;
+	assign heartX = (x-(POSX-8));
+    assign heartY = (y-(POSY-8));
+
 
 	// video status output from vga_sync to tell when to route out rgb signal to DAC
     wire p_tick;
 	// instantiate vga_sync
 	vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(hsync), .vsync(vsync), .p_tick(p_tick), .x(x), .y(y));
     heart player (.clk(clk), .x(heartX), .y(heartY), .rgb_reg(heartRGB));
+    menu Menu (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menuRGB));
     
 	always @(posedge clk) begin
+	    index = index+1;
         if (reset)
             rgb_reg <= 0;
         else
-            //generic circle
-//            if(((x-C[9:0])*(x-C[9:0])+(y-C[19:10])*(y-C[19:10])) <= 10000)
-//                    video = 1;
-            //play area
-            if((x>=PLAYAREAX-103 && x<=PLAYAREAX-100 && y>=PLAYAREAY-103 && y<=PLAYAREAY+103) ||
-                (x>=PLAYAREAX+100 && x<=PLAYAREAX+103 && y>=PLAYAREAY-103 && y<=PLAYAREAY+103) ||
-                (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY-103 && y<=PLAYAREAY-100) ||
-                (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY+100 && y<=PLAYAREAY+103))
-                    rgb_reg <= 12'b111111111111;
-            //heart
-            else if(x>=POSX-8 && x<=POSX+8 && y>=POSY-8 && y<=POSY+8)
+            if(state[31:28]==4'b0001)
                 begin
-                    heartX = (x-(POSX-8));
-                    heartY = (y-(POSY-8));
-                    rgb_reg = heartRGB; 
+//                    heartX = (x-(POSX-8));
+//                    heartY = (y-(POSY-8));
+//                    rgb_reg = heartRGB; 
                 end
-            
+            else if(state[31:28]==4'b1001)
+                begin
+                //generic circle
+    //            if(((x-C[9:0])*(x-C[9:0])+(y-C[19:10])*(y-C[19:10])) <= 10000)
+    //                    video = 1;
+                //play area
+                if((x>=PLAYAREAX-103 && x<=PLAYAREAX-100 && y>=PLAYAREAY-103 && y<=PLAYAREAY+103) ||
+                    (x>=PLAYAREAX+100 && x<=PLAYAREAX+103 && y>=PLAYAREAY-103 && y<=PLAYAREAY+103) ||
+                    (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY-103 && y<=PLAYAREAY-100) ||
+                    (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY+100 && y<=PLAYAREAY+103))
+                        rgb_reg <= 12'b111111111111;
+                //heart
+                else if(x>=POSX-8 && x<=POSX+8 && y>=POSY-8 && y<=POSY+8)
+                    begin
+                        rgb_reg = heartRGB; 
+                    end
+                //bullet
+                else if(x>=POSX-SIZE && x<=POSX+SIZE && y>=POSY-SIZE && y<=POSY+SIZE && isRender && bulletColor!=2)
+                    begin
+                        case(bulletColor)
+                            8'b00: begin rgb_reg = 12'b111111111111; end
+                            8'b01: begin rgb_reg = 12'b000011110000; end
+                        endcase
+                    end
+                else if(x>=POSX-BLUE && x<=POSX+BLUE && y>=POSY-BLUE && y<=POSY+BLUE && isRender && bulletColor==2)
+                    rgb_reg <= 12'b000000001111;
+                //hp bar
+                else if(x>=HPX && x<=HPX+HP*3 && y>=HPY && y<=HPY+5)
+                    rgb_reg <= 12'b111100000000;
+                else if(x>=HPX+300 && x<=HPX+303 && y>=HPY && y<=HPY+5)
+                    rgb_reg <= 12'b111111111111;
+                else rgb_reg <= 12'b000000000000;
+                end
+            else if(state[31:28]==4'b1010)
+                begin
+                    //play area
+                    if((x>=PLAYAREAX-103 && x<=PLAYAREAX-100 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23) ||
+                    (x>=PLAYAREAX+100 && x<=PLAYAREAX+103 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23) ||
+                    (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY-23 && y<=PLAYAREAY-20) ||
+                    (x>=PLAYAREAX-103 && x<=PLAYAREAX+103 && y>=PLAYAREAY+20 && y<=PLAYAREAY+23))
+                        rgb_reg <= 12'b111111111111;
+                    //hp bar
+                    else if(x>=HPX && x<=HPX+HP*3 && y>=HPY && y<=HPY+5)
+                        rgb_reg <= 12'b111100000000;
+                    else if(x>=HPX+300 && x<=HPX+303 && y>=HPY && y<=HPY+5)
+                        rgb_reg <= 12'b111111111111;
+                    //slider
+                    else if(x>=SLIDE-1 && x<=SLIDE+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23)
+                        rgb_reg <= 12'b111111111111;
+                    //slider help
+                    else if(x>=PLAYAREAX-1 && x<=PLAYAREAX+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY-18)
+                        rgb_reg <= 12'b111111111111;
+                end
             else rgb_reg <= 12'b000000000000;
-            //hp bar
             
 //            case(color)
 //                2'b00: rgb_reg <= 12'b111111111111;
