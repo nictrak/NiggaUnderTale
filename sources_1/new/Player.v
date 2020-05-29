@@ -28,8 +28,8 @@ module Player(
     output [7:0] HP,
     output [7:0] ATK,
     input [15:0] instruction,
-    input clk
-
+    input clk,
+    input clk_10hz
     );
     
     reg [7:0] x;
@@ -47,28 +47,9 @@ module Player(
     wire [7:0] movementSpeed = 4;
     wire [7:0]size = 10;
    
-    
-    
-    always@(posedge clk)
-    begin
-        case (instruction[15:12])
-            default : ;
-            4'b0001 : 
-                begin
-                HP = HP+instruction[11:4]; //Heal player health
-                if(HP>100) HP=100;
-                end
-            4'b0010 : 
-                begin
-                if (HP != 0) HP = HP-instruction[11:4]; //Damage player health
-                if (HP > 100) HP = 0;
-                end
-            4'b0011 : ATK = ATK+instruction[11:4]; //Increse player attack power
-            4'b0100 : ATK = instruction[11:4]; //set attack power to number
-            4'b0000 : ;
-            4'b0101 : 
-                begin
-                case(instruction[11:4])
+    always@(posedge clk_10hz) begin
+        if(instruction[15:12] == 4'b0101) begin
+            case(instruction[11:4])
                     0 : 
                         begin
                         x = x-movementSpeed;
@@ -89,8 +70,27 @@ module Player(
                         y = y+movementSpeed;
                         if(y>200-size/2) y=200-size/2;
                         end
-                endcase
+            endcase
+        end
+    end
+    
+    always@(posedge clk)
+    begin
+        case (instruction[15:12])
+            default : ;
+            4'b0001 : 
+                begin
+                HP = HP+instruction[11:4]; //Heal player health
+                if(HP>100) HP=100;
                 end
+            4'b0010 : 
+                begin
+                if (HP != 0) HP = HP-instruction[11:4]; //Damage player health
+                if (HP > 100) HP = 0;
+                end
+            4'b0011 : ATK = ATK+instruction[11:4]; //Increse player attack power
+            4'b0100 : ATK = instruction[11:4]; //set attack power to number
+            4'b0000 : ;
             4'b0110 : HP = instruction[11:4]; //set HP                      
         endcase
         
