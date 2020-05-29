@@ -55,7 +55,7 @@ vga_test vga(
 
 wire clk_1hz;
 wire clk_10hz;
-clock(clk_1hz,clk_10hz,clk);
+clock(clk_1hz,clk_10hz,clk_20hz,clk_40hz,clk);
 
 wire [15:0] playerInstruction;
 Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz);
@@ -75,6 +75,10 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
 
 Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isDmgComplete,damage,heal,clk);
 
+
+reg reset;
+always @(posedge clk_20hz)
+reset = ~reset;
 
 uart_echo u2(
 .TX(RsTx),

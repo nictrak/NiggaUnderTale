@@ -39,9 +39,9 @@ module Machine(
     parameter ZERO = 4'b0000; // for IDLE
     //key enum
     parameter W = 4'b0001;
-    parameter D = 4'b0010;
+    parameter A = 4'b0010;
     parameter S = 4'b0011;
-    parameter A = 4'b0100;
+    parameter D = 4'b0100;
     parameter J = 4'b0101;
     parameter K = 4'b0110;
     parameter L = 4'b0111;

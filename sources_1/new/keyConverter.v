@@ -39,8 +39,8 @@ module keyConverter(
             case(key)
                 8'b10000000: index = 1; //W
                 8'b01000000: index = 3; //S
-                8'b00100000: index = 4; //A
-                8'b00010000: index = 2; //D
+                8'b00100000: index = 2; //A
+                8'b00010000: index = 4; //D
                 8'b00001000: index = 5; //J
                 8'b00000100: index = 6; //K
                 8'b00000010: index = 7; //L
