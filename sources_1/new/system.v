@@ -43,10 +43,10 @@ wire isRender;
 wire [2:0] index;
 vga_test vga(
     .clk(clk),
-    .isRender(1'b1), 
+    .isRender(isRender), 
     .playerPos(playerPos),
-    .bulletPos(16'b01000000_01000000),
-    .bulletColor(2'b00),
+    .bulletPos(bulletPos),
+    .bulletColor(bulletColor[1:0]),
     .state(state),
     .hsync(Hsync),
     .vsync(Vsync),
@@ -65,7 +65,7 @@ wire [15:0] bulletPos2;
 wire [2:0] bulletColor2;
 wire isRender2;
 wire [2:0] index2;
-wire isRun;
+reg isRun = 1;
 
 Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun,clk_10hz);
 
