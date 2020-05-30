@@ -29,37 +29,49 @@ module Bullet(
     output wire[15:0] size2,
     output wire[2:0] color2,
     output wire isRender2,
-    input wire[2:0] index1,
-    input wire[2:0] index2,
+    input wire[2:0] index1, //for vga
+    input wire[2:0] index2, //for damagecalculator and colision
+    input wire isRun,
     input clk
 
     );
-    reg [63:0] mem [0:7];
+    reg [35:0] mem [0:7];
     
     
     assign position1 [15:8] = mem[index1][15:8];
     assign position1 [7:0] = mem[index1][7:0];
-    assign size1 [15:8] = mem[index1][23:16];
-    assign size1 [7:0] = mem[index1][31:24];
+    assign size1 [15:8] = mem[index1][31:24];
+    assign size1 [7:0] = mem[index1][23:16];
     assign color1 = mem[index1][34:32];
     assign isRender1 = mem[index1][35];
     
     assign position2 [15:8] = mem[index2][15:8];
     assign position2 [7:0] = mem[index2][7:0];
-    assign size2 [15:8] = mem[index2][23:16];
-    assign size2 [7:0] = mem[index2][31:24];
+    assign size2 [15:8] = mem[index1][31:24];
+    assign size2 [7:0] = mem[index1][23:16];
     assign color2 = mem[index2][34:32];
     assign isRender2 = mem[index2][35];
         
     always @(posedge clk)
     begin
+        if(isRun) begin
+            if(mem[0][7:0] >= 200) mem[0][7:0] = 8'b0000_0001; 
+            else mem[0][7:0] = mem[0][7:0] + 10;
+            if(mem[1][7:0] >= 200) mem[1][7:0] = 8'b0000_0001; 
+            else mem[1][7:0] = mem[1][7:0] + 10;
+            if(mem[2][7:0] >= 200) mem[2][7:0] = 8'b0000_0001; 
+            else mem[2][7:0] = mem[2][7:0] + 10;
+        end
     end
     
     initial
     begin
-    mem[1] = 64'b00000000_00000000_00000000_00000000_01010000_01010000_00000100_00000100; //test
-    mem[2] = 64'b00000000_00000000_00000000_00000001_01010000_01010000_00000100_00000100; //test
-    mem[3] = 64'b00000000_00000000_00000000_00000010_01010000_01010000_00000100_00000100; //test
+    mem[0] = 35'b1_000_00010000_00010000_01000000_00010011;
+    mem[1] = 35'b1_001_00010000_00010000_01100000_00010011;
+    mem[2] = 35'b1_010_01100100_01100100_01100111_01100111;
+    mem[3] = 35'b0_010_00000011_00000011_01010000_00010011;
+    mem[4] = 35'b0_010_00000011_00000011_01010000_00010011;
+    mem[5] = 35'b0_010_00000011_00000011_01010000_00010011;
     end
     
     

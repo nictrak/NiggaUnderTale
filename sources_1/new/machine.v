@@ -77,7 +77,7 @@ module Machine(
     reg[7:0] nextState;
     
     wire [3:0] key; 
-    keyConverter(key,keyboard,clk);
+    keyConverter kc(key,keyboard,clk);
 
     
     
@@ -90,6 +90,7 @@ module Machine(
     end
     
     always @(posedge clk) begin
+        startDmg = 0;
         nextState = state;
         isMove = 0;
         case(page)
@@ -106,9 +107,10 @@ module Machine(
                 if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
                 end
-                else if(isDmgComplete && (heal || damage >= 0)) begin
+                else if(isDmgComplete) begin
                     if(heal) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
-                    else playerInstruction = {DPY, damage, ZERO};
+                    else if(damage >= 0) playerInstruction = {DPY, damage, ZERO};
+                    startDmg = 1;
                 end else begin
                     if(key >= 0) isMove = 1; 
                     case(key)
