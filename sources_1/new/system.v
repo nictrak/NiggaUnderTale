@@ -37,15 +37,16 @@ wire [1:0] cl;
 wire [15:0] playerPos;
 wire [15:0] bulletPos;
 wire [2:0] bulletColor;
-reg [31:0] state = 32'b10010000_01100000_01000000_00000000;
+wire [31:0] state = {8'b10010000,monHPrender,pHP,8'b00000000};
+wire [7:0]monHPrender = 100-monHP; 
 wire isRender;
 wire [2:0] index;
 vga_test vga(
     .clk(clk),
-    .isRender(isRender), 
+    .isRender(1'b1), 
     .playerPos(playerPos),
-    .bulletPos(bulletPos),
-    .bulletColor(bulletColor),
+    .bulletPos(16'b01000000_01000000),
+    .bulletColor(2'b00),
     .state(state),
     .hsync(Hsync),
     .vsync(Vsync),
