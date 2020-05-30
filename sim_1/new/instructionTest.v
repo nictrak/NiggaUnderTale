@@ -40,7 +40,7 @@ module instructionTest(
     wire[7:0] HP;
     wire[7:0] ATK;
 
-    Player p(pState, position, size, isDeath, HP, ATK, playerInstruction, clk);
+    Player p(pState, position, size, isDeath, HP, ATK, playerInstruction, clk, clk);
     
     always
     #5 clk=~clk;
