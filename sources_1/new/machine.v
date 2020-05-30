@@ -33,7 +33,8 @@ module Machine(
     input wire isDmgComplete,
     input wire[7:0] damage,
     input wire heal,
-    input wire clk
+    input wire clk,
+    input wire clk_1hz
     );
     
     parameter ZERO = 4'b0000; // for IDLE
@@ -69,10 +70,12 @@ module Machine(
     parameter DOWN = 8'b0000_0010;
     parameter RIGHT = 8'b0000_0011;
     
+    parameter  DODGE_TIME = 7;
+    
     wire[3:0] page;
     wire[3:0] substage;
     assign page = state[7:4];
-    assign substage = state[3:0];
+    assign substate = state[3:0];
     
     reg[7:0] nextState;
     
@@ -87,6 +90,12 @@ module Machine(
         monHP = 0;
         isMove = 0;
         playerInstruction = {ZERO, ZERO, ZERO, ZERO};
+    end
+    
+    always @(posedge clk_1hz) begin
+        if(page == DODGE) begin
+            state = state + 1;
+        end
     end
     
     always @(posedge clk) begin
@@ -104,7 +113,8 @@ module Machine(
                 end
             end
             DODGE: begin
-                if(isDeath === 1) begin
+                if(substate == 7) nextState = {MENU, ZERO};
+                else if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
                 end
                 else if(isDmgComplete) begin
