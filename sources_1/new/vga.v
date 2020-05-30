@@ -160,7 +160,7 @@ module vga_test
 	// instantiate vga_sync
 	vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(hsync), .vsync(vsync), .p_tick(p_tick), .x(x), .y(y));
     heart player (.clk(clk), .x(heartX), .y(heartY), .rgb_reg(heartRGB));
-    menu Menu (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menuRGB));
+//    menu Menu (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menuRGB));
     
 	always @(posedge clk) begin
 	    index = index+1;
@@ -169,8 +169,8 @@ module vga_test
         else
             if(state[31:28]==4'b0001)
                 begin
-                    if(x>=PLAYAREAX-256 && x<=PLAYAREAX+256 && y>=PLAYAREAY-256 && y<=PLAYAREAY+256)
-                        rgb_reg = menuRGB; 
+//                    if(x>=PLAYAREAX-256 && x<=PLAYAREAX+256 && y>=PLAYAREAY-256 && y<=PLAYAREAY+256)
+//                        rgb_reg = menuRGB; 
                 end
             else if(state[31:28]==4'b1001)
                 begin
