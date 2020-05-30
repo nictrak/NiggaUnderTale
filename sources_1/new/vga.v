@@ -192,8 +192,8 @@ module vga_test
                 else if(x>=POSX-SIZE && x<=POSX+SIZE && y>=POSY-SIZE && y<=POSY+SIZE && isRender && bulletColor!=2)
                     begin
                         case(bulletColor)
-                            8'b00: begin rgb_reg = 12'b111111111111; end
-                            8'b01: begin rgb_reg = 12'b000011110000; end
+                            2'b00: begin rgb_reg = 12'b111111111111; end
+                            2'b01: begin rgb_reg = 12'b000011110000; end
                         endcase
                     end
                 else if(x>=POSX-BLUE && x<=POSX+BLUE && y>=POSY-BLUE && y<=POSY+BLUE && isRender && bulletColor==2)
@@ -201,7 +201,7 @@ module vga_test
                 //hp bar
                 else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY && y<=HPY+5)
                     rgb_reg <= 12'b111100000000;
-                else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY+7 && y<=HPY+12)
+                else if(x>=HPX && x<=HPX+state[23:16]*3 && y>=HPY+7 && y<=HPY+12)
                     rgb_reg <= 12'b111111110000;
                 else if(x>=HPX+300 && x<=HPX+302 && y>=HPY && y<=HPY+12)
                     rgb_reg <= 12'b111111111111;
@@ -218,7 +218,7 @@ module vga_test
                     //hp bar
                 else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY && y<=HPY+5)
                     rgb_reg <= 12'b111100000000;
-                else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY+7 && y<=HPY+12)
+                else if(x>=HPX && x<=HPX+state[23:16]*3 && y>=HPY+7 && y<=HPY+12)
                     rgb_reg <= 12'b111111110000;
                 else if(x>=HPX+300 && x<=HPX+302 && y>=HPY && y<=HPY+12)
                     rgb_reg <= 12'b111111111111;

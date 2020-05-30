@@ -35,11 +35,11 @@ wire [1:0] cl;
 //    cY = 100;
 //end
 wire [15:0] playerPos;
-reg [15:0] bulletPos = 16'b0;
-reg [2:0] bulletColor = 3'b0;
-reg [31:0] state = 32'b10010000000000000000000000000000;
-reg isRender = 1;
-wire [2:0] index = 3'b0;
+wire [15:0] bulletPos;
+wire [2:0] bulletColor;
+reg [31:0] state = 32'b10010000_01100000_01000000_00000000;
+wire isRender;
+wire [2:0] index;
 vga_test vga(
     .clk(clk),
     .isRender(isRender), 
@@ -57,7 +57,22 @@ wire clk_1hz;
 wire clk_10hz;
 clock(clk_1hz,clk_10hz,clk_20hz,clk_40hz,clk);
 
+wire [15:0] bulletSize;
+wire [15:0] bulletSize2;
+wire [15:0] playerPos2;
+wire [15:0] bulletPos2;
+wire [2:0] bulletColor2;
+wire isRender2;
+wire [2:0] index2;
+wire isRun;
+
+Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun,clk_10hz);
+
 wire [15:0] playerInstruction;
+wire [31:0] pstate;
+wire [7:0] psize;
+wire [7:0] pHP;
+wire [7:0] pATK;
 Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz);
 
 

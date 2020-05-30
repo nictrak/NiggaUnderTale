@@ -29,8 +29,8 @@ module Bullet(
     output wire[15:0] size2,
     output wire[2:0] color2,
     output wire isRender2,
-    input wire[2:0] index1,
-    input wire[2:0] index2,
+    input wire[2:0] index1, //for vga
+    input wire[2:0] index2, //for damagecalculator and colision
     input wire isRun,
     input clk
 
@@ -66,9 +66,12 @@ module Bullet(
     
     initial
     begin
-    mem[0] = 35'b1_000_00000011_00000011_01000000_00000011;
-    mem[1] = 35'b1_001_00000011_00000011_01100000_00000011;
-    mem[2] = 35'b1_010_00000011_00000011_01010000_00000011;
+    mem[0] = 35'b1_000_00010000_00010000_01000000_00010011;
+    mem[1] = 35'b1_001_00010000_00010000_01100000_00010011;
+    mem[2] = 35'b1_010_01100100_01100100_01100111_01100111;
+    mem[3] = 35'b0_010_00000011_00000011_01010000_00010011;
+    mem[4] = 35'b0_010_00000011_00000011_01010000_00010011;
+    mem[5] = 35'b0_010_00000011_00000011_01010000_00010011;
     end
     
     
