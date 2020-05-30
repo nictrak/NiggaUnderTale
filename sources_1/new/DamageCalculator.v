@@ -33,7 +33,7 @@ module DamageCalculator(
     input wire clk
     );
     
-    parameter attackPower = 50;
+    parameter attackPower = 10;
     
     reg isRun;
     
