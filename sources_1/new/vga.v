@@ -138,13 +138,13 @@ module vga_test
 	// register for Basys 2 8-bit RGB DAC 
 	reg [11:0] rgb_reg;
 	reg reset = 0;
-	reg [8:0] menuX, menuY;
 	reg [7:0] bulletSize;
 	wire [9:0] x, y;
 	wire [11:0] heartRGB;
 	wire [11:0] menuRGB;
 	wire[9:0] POSX, POSY, BPOSX, BPOSY;
 	wire [3:0] heartX, heartY;
+	wire [8:0] menuX, menuY;
 	
 	assign POSX = playerPos[15:8]+220;
 	assign POSY = playerPos[7:0]+140;
@@ -152,7 +152,8 @@ module vga_test
 	assign BPOSY = bulletPos[7:0]+140;
 	assign heartX = (x-(POSX-8));
     assign heartY = (y-(POSY-8));
-
+    assign menuX = (x-(PLAYAREAX-256));
+    assign menuY = (y-(PLAYAREAY-256));
 
 	// video status output from vga_sync to tell when to route out rgb signal to DAC
     wire p_tick;
@@ -168,9 +169,8 @@ module vga_test
         else
             if(state[31:28]==4'b0001)
                 begin
-//                    heartX = (x-(POSX-8));
-//                    heartY = (y-(POSY-8));
-//                    rgb_reg = heartRGB; 
+                    if(x>=PLAYAREAX-256 && x<=PLAYAREAX+256 && y>=PLAYAREAY-256 && y<=PLAYAREAY+256)
+                        rgb_reg = menuRGB; 
                 end
             else if(state[31:28]==4'b1001)
                 begin
@@ -189,14 +189,14 @@ module vga_test
                         rgb_reg = heartRGB; 
                     end
                 //bullet
-                else if(x>=POSX-SIZE && x<=POSX+SIZE && y>=POSY-SIZE && y<=POSY+SIZE && isRender && bulletColor!=2)
+                else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && isRender==1 && bulletColor!=2)
                     begin
                         case(bulletColor)
                             2'b00: begin rgb_reg = 12'b111111111111; end
                             2'b01: begin rgb_reg = 12'b000011110000; end
                         endcase
                     end
-                else if(x>=POSX-BLUE && x<=POSX+BLUE && y>=POSY-BLUE && y<=POSY+BLUE && isRender && bulletColor==2)
+                else if(x>=BPOSX-BLUE && x<=BPOSX+BLUE && y>=BPOSY-BLUE && y<=BPOSY+BLUE && isRender==1 && bulletColor==2)
                     rgb_reg <= 12'b000000001111;
                 //hp bar
                 else if(x>=HPX && x<=HPX+state[15:8]*3 && y>=HPY && y<=HPY+5)
