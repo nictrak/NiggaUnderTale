@@ -163,7 +163,8 @@ module vga_test
 //    menu Menu (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menuRGB));
     
 	always @(posedge clk) begin
-	    index = index+1;
+	    if (index === 7) index=0;
+	    else index = index+1;
         if (reset)
             rgb_reg <= 0;
         else
