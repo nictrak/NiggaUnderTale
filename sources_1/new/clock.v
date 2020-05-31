@@ -25,6 +25,8 @@ output clk_1hz,
 output clk_10hz,
 output clk_20hz,
 output clk_40hz,
+output clk_8,
+output clk2_10,
 input clk
 );
     wire [27:0] tclk;
@@ -33,6 +35,8 @@ input clk
     assign clk_10hz=tclk[23];
     assign clk_20hz=tclk[22];
     assign clk_40hz=tclk[21];
+    assign clk_8=tclk[3];
+    assign clk2_10=tclk[18];
     genvar c;
     generate for(c=0; c<27; c=c+1)
         begin

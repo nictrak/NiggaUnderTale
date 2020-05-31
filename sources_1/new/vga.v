@@ -122,7 +122,8 @@ module vga_test
 		input wire [31:0] state,
 		output wire hsync, vsync,
 		output wire [11:0] rgb,
-		output reg [2:0] index
+		output reg [2:0] index,
+		input wire clk2_10
 	);
 
 	parameter WIDTH = 640;
@@ -162,9 +163,27 @@ module vga_test
     heart player (.clk(clk), .x(heartX), .y(heartY), .rgb_reg(heartRGB));
 //    menu Menu (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menuRGB));
     
+    reg [3:0] counter;
+    initial
+    begin
+    index = 0;
+    counter = 0;
+    end
+    
+//    always @(posedge clk2_10) begin
+//    if (index === 2) index = 0;
+//	else index = index+1;
+//    end
+    
 	always @(posedge clk) begin
-	    if (index === 7) index=0;
-	    else index = index+1;
+//	    if (counter === 7) begin
+//	       if (index === 7) index = 0;
+//	       else index = index+1;
+//	       counter = 0;
+//	    end
+//	    counter = counter +1;
+        if (index === 2) index = 0;
+    	else index = index+1;
         if (reset)
             rgb_reg <= 0;
         else
@@ -190,13 +209,17 @@ module vga_test
                         rgb_reg = heartRGB; 
                     end
                 //bullet
-                else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && isRender==1 && bulletColor!=2)
-                    begin
-                        case(bulletColor)
-                            2'b00: begin rgb_reg = 12'b111111111111; end
-                            2'b01: begin rgb_reg = 12'b000011110000; end
-                        endcase
-                    end
+//                else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && isRender==1 && bulletColor!=2)
+//                    begin
+//                        case(bulletColor)
+//                            2'b00: begin rgb_reg = 12'b111111111111; end
+//                            2'b01: begin rgb_reg = 12'b000011110000; end
+//                        endcase
+//                    end
+                else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && isRender==1 && bulletColor==0)
+                    rgb_reg <= 12'b111111111111;
+                else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && isRender==1 && bulletColor==1)
+                    rgb_reg <= 12'b000011110000;
                 else if(x>=BPOSX-BLUE && x<=BPOSX+BLUE && y>=BPOSY-BLUE && y<=BPOSY+BLUE && isRender==1 && bulletColor==2)
                     rgb_reg <= 12'b000000001111;
                 //hp bar

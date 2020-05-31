@@ -51,12 +51,13 @@ vga_test vga(
     .hsync(Hsync),
     .vsync(Vsync),
     .rgb({vgaRed, vgaGreen, vgaBlue}),
-    .index(index)
+    .index(index),
+    .clk2_10(clk2_10)
 );
 
 wire clk_1hz;
 wire clk_10hz;
-clock(clk_1hz,clk_10hz,clk_20hz,clk_40hz,clk);
+clock(clk_1hz,clk_10hz,clk_20hz,clk_40hz,clk_8,clk2_10,clk);
 
 wire [15:0] bulletSize;
 wire [15:0] bulletSize2;
