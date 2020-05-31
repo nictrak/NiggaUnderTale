@@ -32,6 +32,7 @@ module Bullet(
     input wire[2:0] index1, //for vga
     input wire[2:0] index2, //for damagecalculator and colision
     input wire isRun,
+    input wire isCollide,
     input clk
 
     );
@@ -55,6 +56,7 @@ module Bullet(
     always @(posedge clk)
     begin
         if(isRun) begin
+            if(isCollide == 1) mem[index2][35] = 0;
             if(mem[0][7:0] >= 200) mem[0][7:0] = 8'b0000_0001; 
             else mem[0][7:0] = mem[0][7:0] + 10;
             if(mem[1][7:0] >= 200) mem[1][7:0] = 8'b0000_0001; 
