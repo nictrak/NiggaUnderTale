@@ -144,7 +144,7 @@ module vga_test
 	wire [11:0] menuRGB;
 	wire[9:0] POSX, POSY, BPOSX, BPOSY;
 	wire [3:0] heartX, heartY;
-	wire [8:0] menuX, menuY;
+	wire [6:0] logoX, logoY;
 	
 	assign POSX = playerPos[15:8]+220;
 	assign POSY = playerPos[7:0]+140;
@@ -152,8 +152,8 @@ module vga_test
 	assign BPOSY = bulletPos[7:0]+140;
 	assign heartX = (x-(POSX-8));
     assign heartY = (y-(POSY-8));
-    assign menuX = (x-(PLAYAREAX-256));
-    assign menuY = (y-(PLAYAREAY-256));
+//    assign menuX = (x-(PLAYAREAX-256));
+//    assign menuY = (y-(PLAYAREAY-256));
 
 	// video status output from vga_sync to tell when to route out rgb signal to DAC
     wire p_tick;
@@ -224,11 +224,12 @@ module vga_test
                 else if(x>=HPX+300 && x<=HPX+302 && y>=HPY && y<=HPY+12)
                     rgb_reg <= 12'b111111111111;
                     //slider
-                    else if(x>=PLAYAREAX-128+state[7:0]-1 && x<=PLAYAREAX-128+state[7:0]+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23)
-                        rgb_reg <= 12'b111111111111;
+                else if(x>=PLAYAREAX-128+state[7:0]-1 && x<=PLAYAREAX-128+state[7:0]+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY+23)
+                    rgb_reg <= 12'b111111111111;
                     //slider help
-                    else if(x>=PLAYAREAX-1 && x<=PLAYAREAX+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY-18)
-                        rgb_reg <= 12'b111111111111;
+                else if(x>=PLAYAREAX-1 && x<=PLAYAREAX+1 && y>=PLAYAREAY-23 && y<=PLAYAREAY-18)
+                    rgb_reg <= 12'b111111111111;
+                else rgb_reg <= 12'b000000000000;
                 end
             else rgb_reg <= 12'b000000000000;
             
