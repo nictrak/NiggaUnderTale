@@ -45,29 +45,28 @@ module DamageCalculator(
         heal = 0;
     end
     
-    //start iteration
-    always @(posedge start) begin
-        isRun = 1;
-        damage = 0;
-        index = 0;
-        isComplete = 0;
-        heal = 0;
-    end
-    
     always @(posedge clk) begin
-        if(isComplete) isComplete = 0;
-        if(isRun) begin
-            if(isCollide && isRender) begin
-                //TODO color check before add damge
-                if (color == 0)damage = damage + attackPower;
-                else if (color == 1) heal = 1;
-                else if (color == 2 && isMove == 1) damage = damage + attackPower;
+        if(start == 1) begin
+            isRun = 1;
+            damage = 0;
+            index = 0;
+            isComplete = 0;
+            heal = 0;
+        end else begin
+            if(isComplete) isComplete = 0;
+            if(isRun) begin
+                if(isCollide && isRender) begin
+                    //TODO color check before add damge
+                    if (color == 0)damage = damage + attackPower;
+                    else if (color == 1) heal = 1;
+                    else if (color == 2 && isMove == 1) damage = damage + attackPower;
+                end
+                if(index === 7) begin
+                        isComplete = 1;
+                        isRun = 0;
+                end else index = index + 1;
             end
-            if(index === 7) begin
-                    isComplete = 1;
-                    isRun = 0;
-            end else index = index + 1;
-        end
+       end
     end
     
 endmodule
