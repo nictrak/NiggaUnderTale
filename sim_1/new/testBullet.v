@@ -34,9 +34,10 @@ module testBullet(
     reg[2:0] index1;
     reg[2:0] index2;
     reg isRun;
+    reg isCollide = 0;
     reg clk;
     
-    Bullet a(position1,size1,color1,isRender1,position2,size2,color2,isRender2,index1,index2,isRun,clk);
+    Bullet a(position1,size1,color1,isRender1,position2,size2,color2,isRender2,index1,index2,isRun, isCollide,clk);
     
     always
     #5 clk=~clk;
@@ -47,6 +48,8 @@ module testBullet(
     clk=0;
     isRun = 1;
     #500 index1 = 1;
+    isCollide = 1;
+    #10 isCollide = 0;
     #1000 $finish;
     end
     
