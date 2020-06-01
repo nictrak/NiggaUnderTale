@@ -87,6 +87,7 @@ module Machine(
         monHP = 0;
         isMove = 0;
         playerInstruction = {ZERO, ZERO, ZERO, ZERO};
+        startDmg = 0;
     end
     
     always @(posedge clk) begin
@@ -107,8 +108,8 @@ module Machine(
                 if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
                 end
-                else if(isDmgComplete) begin
-                    if(heal) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
+                else if(isDmgComplete === 1) begin
+                    if(heal === 1) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
                     else if(damage >= 0) playerInstruction = {DPY, damage, ZERO};
                     startDmg = 1;
                 end else begin
