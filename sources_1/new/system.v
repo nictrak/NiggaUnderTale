@@ -46,7 +46,7 @@ vga_test vga(
     .isRender(isRender), 
     .playerPos(playerPos),
     .bulletPos(bulletPos),
-    .bulletColor(bulletColor[1:0]),
+    .bulletColor(bulletColor),
     .state(state),
     .hsync(Hsync),
     .vsync(Vsync),
