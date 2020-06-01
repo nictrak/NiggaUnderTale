@@ -53,15 +53,15 @@ module DamageCalculator(
             isComplete = 0;
             heal = 0;
         end else begin
-            if(isComplete) isComplete = 0;
-            if(isRun) begin
-                if(isCollide && isRender) begin
+            if(isComplete===1) isComplete = 0;
+            if(isRun===1) begin
+                if(isCollide===1 && isRender===1) begin
                     //TODO color check before add damge
                     if (color == 0)damage = damage + attackPower;
                     else if (color == 1) heal = 1;
                     else if (color == 2 && isMove == 1) damage = damage + attackPower;
                 end
-                if(index === 7) begin
+                if(index === 2) begin
                         isComplete = 1;
                         isRun = 0;
                 end else index = index + 1;

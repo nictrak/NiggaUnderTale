@@ -112,7 +112,7 @@ module Machine(
                     else if(damage >= 0) playerInstruction = {DPY, damage, ZERO};
                     startDmg = 1;
                 end else begin
-                    if(key >= 0) isMove = 1; 
+                    if(key > 0) isMove = 1; 
                     case(key)
                         W: playerInstruction = {MOV, UP, ZERO};
                         A: playerInstruction = {MOV, LEFT, ZERO};

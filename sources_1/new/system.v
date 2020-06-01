@@ -95,7 +95,7 @@ Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmg
 
 
     wire isCollide;
-DamageCalculator(damage,isComplete,index2,heal,isCollide,isRender2,isMove,bulletColor,start,clk);
+DamageCalculator(damage,isComplete,index2,heal,isCollide,isRender2,isMove,bulletColor2,start,clk);
 
 CheckCollision(isCollide,playerPos[15:8],playerPos[7:0],psize,psize,bulletPos2[15:8],bulletPos2[7:0],bulletSize2[15:8],bulletSize2[7:0]);
 

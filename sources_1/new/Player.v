@@ -113,8 +113,8 @@ module Player(
     begin
     HP = 50;
     ATK = 10;
-    x=100;
-    y=100;
+    x=170;
+    y=170;
     end
                       
           
