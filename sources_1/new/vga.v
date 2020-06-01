@@ -134,6 +134,7 @@ module vga_test
 	parameter SIZE = 8;
 	parameter BLUE = 50;
 	parameter SLIDE = 300;
+	parameter LOGO = 130;
 		
 	// register for Basys 2 8-bit RGB DAC 
 	reg [11:0] rgb_reg;
@@ -141,7 +142,7 @@ module vga_test
 	reg [7:0] bulletSize;
 	wire [9:0] x, y;
 	wire [11:0] heartRGB;
-	wire [11:0] menuRGB;
+	wire [11:0] logoRGB;
 	wire[9:0] POSX, POSY, BPOSX, BPOSY;
 	wire [3:0] heartX, heartY;
 	wire [6:0] logoX, logoY;
@@ -152,15 +153,15 @@ module vga_test
 	assign BPOSY = bulletPos[7:0]+140;
 	assign heartX = (x-(POSX-8));
     assign heartY = (y-(POSY-8));
-//    assign menuX = (x-(PLAYAREAX-256));
-//    assign menuY = (y-(PLAYAREAY-256));
+    assign logoX = (x-(PLAYAREAX-64));
+    assign logoY = (y-(LOGO-64));
 
 	// video status output from vga_sync to tell when to route out rgb signal to DAC
     wire p_tick;
 	// instantiate vga_sync
 	vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(hsync), .vsync(vsync), .p_tick(p_tick), .x(x), .y(y));
     heart player (.clk(clk), .x(heartX), .y(heartY), .rgb_reg(heartRGB));
-//    menu Menu (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menuRGB));
+    logo Logo (.clk(clk), .x(logoX), .y(logoY), .rgb_reg(logoRGB));
     
 	always @(posedge clk) begin
 	    if (index === 7) index=0;
@@ -170,8 +171,8 @@ module vga_test
         else
             if(state[31:28]==4'b0001)
                 begin
-//                    if(x>=PLAYAREAX-256 && x<=PLAYAREAX+256 && y>=PLAYAREAY-256 && y<=PLAYAREAY+256)
-//                        rgb_reg = menuRGB; 
+                    if(x>=PLAYAREAX-64 && x<=PLAYAREAX+64 && y>=LOGO-64 && y<=LOGO+64)
+                        rgb_reg = logoRGB; 
                 end
             else if(state[31:28]==4'b1001)
                 begin
