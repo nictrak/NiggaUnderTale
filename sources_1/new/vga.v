@@ -123,7 +123,8 @@ module vga_test
 		output wire hsync, vsync,
 		output wire [11:0] rgb,
 		output reg [2:0] index,
-		input wire clk2_10
+		input wire clk2_10,
+		input wire [2:0]renderl
 	);
 
 	parameter WIDTH = 640;
@@ -216,7 +217,7 @@ module vga_test
 //                            2'b01: begin rgb_reg = 12'b000011110000; end
 //                        endcase
 //                    end
-                else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && isRender==1 && bulletColor==0)
+                else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && renderl[index]==1 && bulletColor==0)
                     rgb_reg <= 12'b111111111111;
                 else if(x>=BPOSX-SIZE && x<=BPOSX+SIZE && y>=BPOSY-SIZE && y<=BPOSY+SIZE && isRender==1 && bulletColor==1)
                     rgb_reg <= 12'b000011110000;

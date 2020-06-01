@@ -32,7 +32,9 @@ module Bullet(
     input wire[2:0] index1, //for vga
     input wire[2:0] index2, //for damagecalculator and colision
     input wire isRun,
-    input clk
+    input clk,
+    input wire isCollide,
+    output reg [2:0] renderl
 
     );
     reg [35:0] mem [0:7];
@@ -52,8 +54,11 @@ module Bullet(
     assign color2 = mem[index2][34:32];
     assign isRender2 = mem[index2][35];
         
+
+    
     always @(posedge clk)
     begin
+        if(isCollide === 1) renderl[index2] = 0;
         if(isRun) begin
             if(mem[0][7:0] >= 200) mem[0][7:0] = 8'b0000_0001; 
             else mem[0][7:0] = mem[0][7:0] + 5;
@@ -71,11 +76,13 @@ module Bullet(
             else mem[6][7:0] = mem[6][7:0] + 5;
             if(mem[7][7:0] >= 200) mem[7][7:0] = 8'b0000_0001; 
             else mem[7][7:0] = mem[7][7:0] + 5;
+            //if (isCollide == 1) mem[index2][35] = 1'b0;
         end
     end
     
     initial
     begin
+    renderl = 3'b111;
     mem[0] = 36'b1_000_00010000_00010000_00100100_00010011;
     mem[1] = 36'b1_001_00010000_00010000_01100100_00010011;
     mem[2] = 36'b1_010_01100100_01100100_00100111_01100111;
