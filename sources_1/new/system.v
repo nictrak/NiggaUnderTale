@@ -90,11 +90,7 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire[7:0] damage;
     wire heal;
     wire isComplete;
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> machine
 Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isComplete,damage,heal,clk);
 
 
