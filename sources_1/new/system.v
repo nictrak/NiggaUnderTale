@@ -69,7 +69,7 @@ wire isRender2;
 wire [2:0] index2;
 reg isRun = 1;
 
-Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun,clk_10hz,isCollide,renderl);
+Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun,clk_10hz,isCollide);
 
 wire [15:0] playerInstruction;
 wire [31:0] pstate;
@@ -87,11 +87,10 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire isDeath;
     wire atkPass;
     wire[7:0] dmgMon;
-    reg isDmgComplete = 0;
-    //wire[7:0] damage;
-    //wire heal;
+    wire[7:0] damage;
+    wire heal;
 
-Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isDmgComplete,damage,heal,clk);
+Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isComplete,damage,heal,clk);
 
 
     wire isComplete;
