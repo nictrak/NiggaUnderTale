@@ -79,6 +79,7 @@ module Machine(
     
     reg[7:0] nextState;
     reg[3:0] timer;
+    reg[3:0] timer2;
     
     wire [3:0] key; 
     keyConverter kc(key,keyboard,clk);
@@ -92,6 +93,7 @@ module Machine(
         isMove = 0;
         playerInstruction = {ZERO, ZERO, ZERO, ZERO};
         timer = 0;
+        timer2 = 0;
     end
     
     always @(posedge clk_1hz) begin
@@ -99,6 +101,10 @@ module Machine(
             timer = timer + 1;
         end
         else timer = ZERO;
+        if(page == ACTION) begin
+            timer2 = timer2 + 1;
+        end
+        else timer2 = ZERO;
     end
     
     always @(posedge clk) begin
@@ -116,7 +122,7 @@ module Machine(
                 end
             end
             DODGE: begin
-                if(timer >= DODGE_TIME) nextState = {MENU, ZERO};
+                if(timer >= DODGE_TIME) nextState = {ACTION, ZERO};
                 else if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
                 end
@@ -137,6 +143,7 @@ module Machine(
                 end
             end
             ACTION: begin
+                if(timer2 >= DODGE_TIME) nextState = {DODGE, ZERO};
             end
             ATTACK: begin
                 if (atkPass === 1) begin
