@@ -97,7 +97,7 @@ input wire [7:0] bx, by, lbx, lby
    always @(px or py or lpx or lpy or bx or by or lbx or lby)
    begin
     if((px <= bx && paddx >= bsubx) || (px > bx && baddx >= psubx)) begin
-        if((py <= by && paddy >= baddy) || (py > by && baddy >= psuby)) begin
+        if((py <= by && paddy >= bsuby) || (py > by && baddy >= psuby)) begin
            check_reg = 1;  
         end
         else begin check_reg = 0; end
