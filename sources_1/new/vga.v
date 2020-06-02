@@ -143,10 +143,10 @@ module vga_test
 	reg [7:0] bulletSize;
 	wire [9:0] x, y;
 	wire [11:0] heartRGB;
-	wire [11:0] logoRGB;
+	wire [2:0] logoRGB;
 	wire[9:0] POSX, POSY, BPOSX, BPOSY;
 	wire [3:0] heartX, heartY;
-	wire [6:0] logoX, logoY;
+	wire [9:0] logoX, logoY;
 	
 	assign POSX = playerPos[15:8]+220;
 	assign POSY = playerPos[7:0]+140;
@@ -154,21 +154,22 @@ module vga_test
 	assign BPOSY = bulletPos[7:0]+140;
 	assign heartX = (x-(POSX-8));
     assign heartY = (y-(POSY-8));
-    assign logoX = (x-(PLAYAREAX-64));
-    assign logoY = (y-(LOGO-64));
+    assign logoX = x-64;
+    assign logoY = y+16;
 
 	// video status output from vga_sync to tell when to route out rgb signal to DAC
     wire p_tick;
 	// instantiate vga_sync
 	vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(hsync), .vsync(vsync), .p_tick(p_tick), .x(x), .y(y));
     heart player (.clk(clk), .x(heartX), .y(heartY), .rgb_reg(heartRGB));
-    logo Logo (.clk(clk), .x(logoX), .y(logoY), .rgb_reg(logoRGB));
+    menu Menu (.clk(clk), .x(logoX[8:0]), .y(logoY[8:0]), .rgb_reg(logoRGB));
     
     reg [3:0] counter;
     initial
     begin
     index = 0;
     counter = 0;
+    rgb_reg = 12'b0;
     end
     
 //    always @(posedge clk2_10) begin
@@ -190,8 +191,18 @@ module vga_test
         else
             if(state[31:28]==4'b0001)
                 begin
-                    if(x>=PLAYAREAX-64 && x<=PLAYAREAX+64 && y>=LOGO-64 && y<=LOGO+64)
-                        rgb_reg = logoRGB; 
+                    if(x>=PLAYAREAX-256 && x<=PLAYAREAX+256)
+//                        rgb_reg = logoRGB; 
+                        case(logoRGB)
+                            3'b000: begin rgb_reg = 12'b000000000000; end
+                            3'b001: begin rgb_reg = 12'b000000001111; end
+                            3'b010: begin rgb_reg = 12'b000011110000; end
+                            3'b011: begin rgb_reg = 12'b000011111111; end
+                            3'b100: begin rgb_reg = 12'b111100000000; end
+                            3'b101: begin rgb_reg = 12'b111100001111; end
+                            3'b110: begin rgb_reg = 12'b111111110000; end
+                            3'b111: begin rgb_reg = 12'b111111111111; end
+                        endcase
                 end
             else if(state[31:28]==4'b1001)
                 begin
@@ -255,7 +266,7 @@ module vga_test
                     rgb_reg <= 12'b111111111111;
                 else rgb_reg <= 12'b000000000000;
                 end
-            else rgb_reg <= 12'b000000000000;
+            else rgb_reg <= 12'b000000001111;
             
 //            case(color)
 //                2'b00: rgb_reg <= 12'b111111111111;
