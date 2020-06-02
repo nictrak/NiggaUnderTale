@@ -91,10 +91,8 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire heal;
     wire isComplete;
 
-Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isComplete,damage,heal,clk);
+Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isComplete,damage,heal,clk, clk_1hz);
 
-
-    wire isCollide;
 DamageCalculator(damage,isComplete,index2,heal,isCollide,isRender2,isMove,bulletColor2,start,clk);
 
 CheckCollision(isCollide,playerPos[15:8],playerPos[7:0],psize,psize,bulletPos2[15:8],bulletPos2[7:0],bulletSize2[15:8],bulletSize2[7:0]);

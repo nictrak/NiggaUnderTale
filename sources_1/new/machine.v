@@ -70,7 +70,7 @@ module Machine(
     parameter DOWN = 8'b0000_0010;
     parameter RIGHT = 8'b0000_0011;
     
-    parameter  DODGE_TIME = 7;
+    parameter DODGE_TIME = 7;
     
     wire[3:0] page;
     wire[3:0] substage;
@@ -78,6 +78,7 @@ module Machine(
     assign substate = state[3:0];
     
     reg[7:0] nextState;
+    reg[3:0] timer;
     
     wire [3:0] key; 
     keyConverter kc(key,keyboard,clk);
@@ -90,12 +91,14 @@ module Machine(
         monHP = 0;
         isMove = 0;
         playerInstruction = {ZERO, ZERO, ZERO, ZERO};
+        timer = 0;
     end
     
     always @(posedge clk_1hz) begin
         if(page == DODGE) begin
-            state = state + 1;
+            timer = timer + 1;
         end
+        else timer = ZERO;
     end
     
     always @(posedge clk) begin
@@ -113,7 +116,7 @@ module Machine(
                 end
             end
             DODGE: begin
-                if(substate == 7) nextState = {MENU, ZERO};
+                if(timer >= DODGE_TIME) nextState = {MENU, ZERO};
                 else if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
                 end
