@@ -37,7 +37,7 @@ module Bullet(
 
     );
     reg [35:0] mem [2:0];
-    
+    reg[2:0] previous;
     
     assign position1 [15:8] = mem[index1][15:8];
     assign position1 [7:0] = mem[index1][7:0];
@@ -52,13 +52,11 @@ module Bullet(
     assign size2 [7:0] = mem[index1][23:16];
     assign color2 = mem[index2][34:32];
     assign isRender2 = mem[index2][35];
-        
-
     
     always @(posedge clk)
     begin
-        if(isCollide === 1) mem[index2][35] = 0;
-        if(isRun) begin
+        if(isRun === 1) begin
+            if(isCollide === 1) mem[previous][35] = 1'b0; 
             if(mem[0][7:0] >= 200) mem[0][7:0] = 8'b0000_0001; 
             else mem[0][7:0] = mem[0][7:0] + 5;
             if(mem[1][7:0] >= 200) mem[1][7:0] = 8'b0000_0001; 
@@ -76,7 +74,12 @@ module Bullet(
 //            if(mem[7][7:0] >= 200) mem[7][7:0] = 8'b0000_0001; 
 //            else mem[7][7:0] = mem[7][7:0] + 5;
             //if (isCollide == 1) mem[index2][35] = 1'b0;
+        end else begin
+            mem[0] = 36'b1_010_00010000_00010000_10100000_00010011;
+            mem[1] = 36'b1_001_01100100_01100100_00111000_00010011;
+            mem[2] = 36'b1_010_00010000_00010000_10100000_00010011;
         end
+        previous = index2;
     end
     
     initial
