@@ -114,7 +114,7 @@ module Machine(
             timer2 = timer2 + 1;
         end
         else timer2 = ZERO;
-         if(page === ATTACK) begin
+         if(page === MENU) begin
             timer3 = timer3 + 1;
         end
         else timer3 = ZERO;
@@ -130,7 +130,7 @@ module Machine(
             end
             MENU: begin
                 playerInstruction = {ZERO, ZERO, ZERO, ZERO};
-                if(key === SPACE) begin
+                if(key === SPACE && timer3 >= 3) begin
                     nextState = {DODGE, ZERO};
                     monHP = 0;
                     playerInstruction = {4'b0110, 8'b0110_0100, ZERO};
@@ -194,7 +194,13 @@ module Machine(
 //                     atkreset = 1;
                 end
                 if(atkPass === 1) begin
-                    nextState = {DODGE, ZERO};
+                    monHP = monHP + dmgMon;
+                    if (monHP >= 100) begin
+                         nextState = {MENU, ZERO};
+                    end
+                    else begin
+                        nextState = {DODGE, ZERO};
+                    end
                     atkstart = 0;
                      atkreset = 1;
                 end
