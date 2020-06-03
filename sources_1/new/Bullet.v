@@ -57,7 +57,7 @@ module Bullet(
     always @(posedge clk, posedge isComplete)
     begin
         if(isRun === 1) begin
-            if(isComplete === 1) begin
+            if(indexCollide) begin
                 mem[0][35] = indexCollide[0];
                 mem[1][35] = indexCollide[1];
                 mem[2][35] = indexCollide[2];
