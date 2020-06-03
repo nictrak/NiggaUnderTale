@@ -48,8 +48,8 @@ module testBullet(
     clk=0;
     isRun = 1;
     isCollide = 0;
-    #15 isCollide = 1;
-    #10 isCollide = 0;
+    #22 isCollide = 1;
+    #2 isCollide = 0;
     #500 index1 = 1;
     #1000 $finish;
     end
