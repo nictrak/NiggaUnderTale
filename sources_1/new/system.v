@@ -66,9 +66,9 @@ wire [15:0] bulletPos2;
 wire [2:0] bulletColor2;
 wire isRender2;
 wire [2:0] index2;
-reg isRun = 1;
+wire bulletIsRun;
 
-Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun,clk_10hz,isCollide);
+Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,bulletIsRun,clk_10hz,isCollide);
 
 wire [15:0] playerInstruction;
 wire [31:0] pstate;
@@ -90,7 +90,7 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire heal;
     wire isComplete;
 
-Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkpass,dmgMon,isComplete,damage,heal,clk, clk_1hz,atkstart,atkbutton,atkreset);
+Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkpass,dmgMon,isComplete,damage,heal,clk, clk_1hz,atkstart,atkbutton,atkreset,bulletIsRun);
 
 DamageCalculator(damage,isComplete,index2,heal,isCollide,isRender2,isMove,bulletColor2,start,clk);
 

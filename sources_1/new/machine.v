@@ -37,7 +37,8 @@ module Machine(
     input wire clk_1hz,
     output reg atkstart,
     output reg atkbutton,
-    output reg atkreset
+    output reg atkreset,
+    output reg bulletIsRun
     );
     
     parameter ZERO = 4'b0000; // for IDLE
@@ -58,6 +59,7 @@ module Machine(
     parameter DODGE = 4'b1001; //dodge bullets state
     parameter ATTACK = 4'b1010; //attack monster state
     parameter ACTION = 4'b1011; //choose action state
+    parameter CHECK = 4'b1100; //choose spare choice
     
     //op code
     parameter HPY = 4'b0001;
@@ -86,6 +88,8 @@ module Machine(
     reg[3:0] timer2;
     reg[3:0] timer3;
     
+    reg mercy;
+    
     wire [3:0] key; 
     keyConverter kc(key,keyboard,clk);
 
@@ -103,6 +107,8 @@ module Machine(
         atkstart = 0;
         atkbutton = 0;
         atkreset = 1;
+        mercy = 0;
+        bulletIsRun = 0;
     end
     
     always @(posedge clk_1hz) begin
@@ -110,10 +116,10 @@ module Machine(
             timer = timer + 1;
         end
         else timer = ZERO;
-        if(page === ACTION) begin
-            timer2 = timer2 + 1;
-        end
-        else timer2 = ZERO;
+//        if(page === ACTION) begin
+//            timer2 = timer2 + 1;
+//        end
+//        else timer2 = ZERO;
          if(page === MENU) begin
             timer3 = timer3 + 1;
         end
@@ -137,18 +143,19 @@ module Machine(
                     atkstart = 0;
                     atkbutton = 0;
                     atkreset = 1;
+                    mercy= 0;
+                    bulletIsRun = 1;
                 end
             end
             DODGE: begin
                 if(timer >= DODGE_TIME) begin
-                nextState = {ATTACK, ZERO};
-                atkstart = 1;
-                atkreset = 0;
-                atkbutton = 0;
+                nextState = {ACTION, ZERO};
                 playerInstruction = {ZERO, ZERO, ZERO, ZERO};
+                bulletIsRun = 0;
                 end
                 else if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
+                         bulletIsRun = 0;
                 end
                 else if(isDmgComplete===1) begin
                     if(heal===1) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
@@ -167,7 +174,23 @@ module Machine(
                 end
             end
             ACTION: begin
-                if(timer2 >= DODGE_TIME) nextState = {DODGE, ZERO};
+                if(key === J) begin
+                    nextState = {ATTACK, ZERO};
+                    atkstart = 1;
+                    atkreset = 0;
+                    atkbutton = 0;
+                end
+                else if(key === K) begin
+                    nextState = {DODGE, ZERO};
+                    bulletIsRun = 1;
+                end
+                if(key === L) begin
+                    if(mercy === 1) nextState = {MENU, ZERO};
+                    else begin
+                    nextState = {DODGE, ZERO};
+                    bulletIsRun = 1;
+                    end
+                end
             end
             ATTACK: begin
 //                if (timer3 >= ATK_TIME) nextState = {DODGE, ZERO};
@@ -200,6 +223,7 @@ module Machine(
                     end
                     else begin
                         nextState = {DODGE, ZERO};
+                        bulletIsRun = 1;
                     end
                     atkstart = 0;
                      atkreset = 1;
