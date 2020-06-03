@@ -143,10 +143,11 @@ module vga_test
 	reg [7:0] bulletSize;
 	wire [9:0] x, y;
 	wire [11:0] heartRGB;
-	wire [2:0] logoRGB;
+	wire [2:0] logoRGB, menu1RGB, menu2RGB;
 	wire[9:0] POSX, POSY, BPOSX, BPOSY;
 	wire [3:0] heartX, heartY;
 	wire [9:0] logoX, logoY;
+	wire [7:0] menuX, menuY;
 	
 	assign POSX = playerPos[15:8]+220;
 	assign POSY = playerPos[7:0]+140;
@@ -156,6 +157,8 @@ module vga_test
     assign heartY = (y-(POSY-8));
     assign logoX = x-64;
     assign logoY = y+16;
+    assign menuX = x-192;
+    assign menuY = y-112;
 
 	// video status output from vga_sync to tell when to route out rgb signal to DAC
     wire p_tick;
@@ -163,6 +166,8 @@ module vga_test
 	vga_sync vga_sync_unit (.clk(clk), .reset(reset), .hsync(hsync), .vsync(vsync), .p_tick(p_tick), .x(x), .y(y));
     heart player (.clk(clk), .x(heartX), .y(heartY), .rgb_reg(heartRGB));
     menu Menu (.clk(clk), .x(logoX[8:0]), .y(logoY[8:0]), .rgb_reg(logoRGB));
+    menu2 Menu2 (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menu2RGB));
+    menu1 Menu1 (.clk(clk), .x(menuX), .y(menuY), .rgb_reg(menu1RGB));
     
     reg [3:0] counter;
     initial
@@ -203,6 +208,38 @@ module vga_test
                             3'b110: begin rgb_reg = 12'b111111110000; end
                             3'b111: begin rgb_reg = 12'b111111111111; end
                         endcase
+                end
+            //check
+            else if(state[31:28]==4'b1100)
+                begin
+                    if(x>=PLAYAREAX-128 && x<=PLAYAREAX+127 && y>=PLAYAREAY-128 && y<=PLAYAREAY+128)
+                        case(menu2RGB)
+                            3'b000: begin rgb_reg = 12'b000000000000; end
+                            3'b001: begin rgb_reg = 12'b000000001111; end
+                            3'b010: begin rgb_reg = 12'b000011110000; end
+                            3'b011: begin rgb_reg = 12'b000011111111; end
+                            3'b100: begin rgb_reg = 12'b111100000000; end
+                            3'b101: begin rgb_reg = 12'b111100001111; end
+                            3'b110: begin rgb_reg = 12'b111111110000; end
+                            3'b111: begin rgb_reg = 12'b111111111111; end
+                        endcase
+                    else rgb_reg <= 12'b000000000000;
+                end
+            //action
+            else if(state[31:28]==4'b1011)
+                begin
+                    if(x>=PLAYAREAX-128 && x<=PLAYAREAX+127 && y>=PLAYAREAY-128 && y<=PLAYAREAY+128)
+                        case(menu1RGB)
+                            3'b000: begin rgb_reg = 12'b000000000000; end
+                            3'b001: begin rgb_reg = 12'b000000001111; end
+                            3'b010: begin rgb_reg = 12'b000011110000; end
+                            3'b011: begin rgb_reg = 12'b000011111111; end
+                            3'b100: begin rgb_reg = 12'b111100000000; end
+                            3'b101: begin rgb_reg = 12'b111100001111; end
+                            3'b110: begin rgb_reg = 12'b111111110000; end
+                            3'b111: begin rgb_reg = 12'b111111111111; end
+                        endcase
+                    else rgb_reg <= 12'b000000000000;
                 end
             else if(state[31:28]==4'b1001)
                 begin
