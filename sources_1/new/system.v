@@ -37,7 +37,7 @@ wire [1:0] cl;
 wire [15:0] playerPos;
 wire [15:0] bulletPos;
 wire [2:0] bulletColor;
-wire [31:0] state = {8'b10010000,monHPrender,pHP,8'b00000000};
+wire [31:0] state = {mstate,monHPrender,pHP,atkGage};
 wire [7:0]monHPrender = 100-monHP; 
 wire isRender;
 wire [2:0] index;
@@ -52,8 +52,7 @@ vga_test vga(
     .vsync(Vsync),
     .rgb({vgaRed, vgaGreen, vgaBlue}),
     .index(index),
-    .clk2_10(clk2_10),
-    .renderl(renderl)
+    .clk2_10(clk2_10)
 );
 
 wire clk_1hz;
@@ -91,13 +90,19 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire heal;
     wire isComplete;
 
-Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isComplete,damage,heal,clk, clk_1hz);
+Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkpass,dmgMon,isComplete,damage,heal,clk, clk_1hz,atkstart,atkbutton,atkreset);
 
 DamageCalculator(damage,isComplete,index2,heal,isCollide,isRender2,isMove,bulletColor2,start,clk);
 
 CheckCollision(isCollide,playerPos[15:8],playerPos[7:0],psize,psize,bulletPos2[15:8],bulletPos2[7:0],bulletSize2[15:8],bulletSize2[7:0]);
 
-
+    wire [7:0] atkdamage;
+    wire [7:0] atkGage;
+    wire atkpass;
+    wire atkstart;
+    wire atkbutton;
+    wire atkreset;
+Attack a(dmgMon,atkGage,atkpass,atkstart,atkbutton,clk_10hz,atkreset);
 
 reg reset;
 always @(posedge clk_20hz)

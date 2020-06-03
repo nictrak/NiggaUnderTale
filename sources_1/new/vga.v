@@ -123,8 +123,7 @@ module vga_test
 		output wire hsync, vsync,
 		output wire [11:0] rgb,
 		output reg [2:0] index,
-		input wire clk2_10,
-		input wire [2:0]renderl
+		input wire clk2_10
 	);
 
 	parameter WIDTH = 640;

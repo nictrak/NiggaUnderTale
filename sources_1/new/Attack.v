@@ -22,43 +22,47 @@
 
 module Attack(
     output [7:0] damage,
-    output [7:0] half,
-    output [7:0] max,
     output [7:0] atkGage,
     output pass,
     input start,
     input button,
-    input clk
+    input clk,
+    input reset
 
     );
     
-    reg [7:0] max = 255;
-    reg [7:0] half = 127;
+    parameter max = 128;
+    parameter half = 127;
     
-    reg [7:0] atkGage;
+    reg [7:0] atkGage=0;
     reg [7:0] damage;
     reg [7:0] atkCon;
-    reg [7:0] ATK = 10;
+    wire reset;
+    
+    parameter ATK = 10;
     
     reg pass; //pass is 0 when attack phase is rendering.
     
     always @(posedge clk)
     begin
-        if(start == 1 & pass == 1)
+        if(reset === 1)
         begin
             atkGage = 0;
             atkCon = half;
             damage = 0;
             pass = 0;
         end
-        else if(pass == 0)
+        else if(start === 1)
         begin
-            atkGage = atkGage + 4;
-            if (atkGage == max)
+        if(button === 0)
             begin
-                pass = 1;
+                if (atkGage >= max)
+                    begin
+                        pass = 1;
+                    end
+               else atkGage = atkGage + 4;
             end
-            else if (button == 1)
+            else
             begin
                 if (atkGage < half) atkCon = half - atkGage;
                 else atkCon = atkGage - half;
@@ -72,7 +76,7 @@ module Attack(
     
     initial
     begin
-    pass = 1;
+    pass = 0;
     damage = 0;   
     end 
     
