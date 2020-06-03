@@ -1,0 +1,10 @@
+diff a/sources_1/new/Attack.v b/sources_1/new/Attack.v	(rejected hunks)
+@@ -76,7 +76,7 @@
+     
+     initial
+     begin
+-    pass = 1;
++    pass = 0;
+     damage = 0;   
+     end 
+     

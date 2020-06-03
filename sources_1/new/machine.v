@@ -180,9 +180,9 @@ module Machine(
 //                    atkbutton = 1;
 //                end
                 
-                if(key === SPACE)begin
-                    atkbutton = 1;
-                     nextState = {DODGE, ZERO};
+                if(key === SPACE) begin
+                    nextState = {DODGE, ZERO};
+                    atkbutton = 1;                     
                      atkstart = 0;
                      atkreset = 1;
                 end

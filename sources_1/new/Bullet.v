@@ -56,7 +56,7 @@ module Bullet(
     always @(posedge clk)
     begin
         if(isRun === 1) begin
-            if(isCollide === 1) mem[previous][35] = 1'b0; 
+            if(isCollide === 1) mem[index2][35] = 1'b0; 
             if(mem[0][7:0] >= 200) mem[0][7:0] = 8'b0000_0001; 
             else mem[0][7:0] = mem[0][7:0] + 5;
             if(mem[1][7:0] >= 200) mem[1][7:0] = 8'b0000_0001; 

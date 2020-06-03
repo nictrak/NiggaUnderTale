@@ -31,7 +31,7 @@ module Attack(
 
     );
     
-    parameter max = 128;
+    parameter max = 255;
     parameter half = 127;
     
     reg [7:0] atkGage=0;
