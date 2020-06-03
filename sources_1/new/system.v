@@ -40,7 +40,7 @@ wire [2:0] bulletColor;
 wire [31:0] state = {8'b10010000,monHPrender,pHP,8'b00000000};
 wire [7:0]monHPrender = 100-monHP; 
 wire isRender;
-//wire [2:0] index;
+wire [2:0] index;
 vga_test vga(
     .clk(clk),
     .isRender(isRender), 
