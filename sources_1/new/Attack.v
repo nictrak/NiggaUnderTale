@@ -31,7 +31,7 @@ module Attack(
 
     );
     
-    parameter max = 255;
+    parameter max = 248;
     parameter half = 127;
     
     reg [7:0] atkGage=0;
@@ -62,8 +62,7 @@ module Attack(
                     end
                else atkGage = atkGage + 4;
             end
-            else
-            begin
+            else begin
                 if (atkGage < half) atkCon = half - atkGage;
                 else atkCon = atkGage - half;
                 
