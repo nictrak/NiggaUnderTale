@@ -25,6 +25,7 @@ module DamageCalculator(
     output reg isComplete,
     output reg[2:0] index,
     output reg heal,
+    output reg[2:0] indexCollide,
     input wire isCollide,
     input wire isRender,
     input wire isMove, //Is player move?
@@ -43,6 +44,7 @@ module DamageCalculator(
         isRun = 0;
         isComplete = 0;
         heal = 0;
+        indexCollide = 3'b111;
     end
     
     always @(posedge clk) begin
@@ -52,6 +54,7 @@ module DamageCalculator(
             index = 0;
             isComplete = 0;
             heal = 0;
+            indexCollide = 3'b111;
         end else begin
             if(isComplete===1) isComplete = 0;
             if(isRun===1) begin
@@ -60,6 +63,7 @@ module DamageCalculator(
                     if (color == 0)damage = damage + attackPower;
                     else if (color == 1) heal = 1;
                     else if (color == 2 && isMove == 1) damage = damage + attackPower;
+                    indexCollide[index] = 0;
                 end
                 if(index === 2) begin
                         isComplete = 1;
