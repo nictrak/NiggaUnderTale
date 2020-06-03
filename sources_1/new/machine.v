@@ -129,9 +129,14 @@ module Machine(
                 nextState = {MENU, ZERO};
             end
             MENU: begin
+                playerInstruction = {ZERO, ZERO, ZERO, ZERO};
                 if(key === SPACE) begin
                     nextState = {DODGE, ZERO};
                     monHP = 0;
+                    playerInstruction = {4'b0110, 8'b0110_0100, ZERO};
+                    atkstart = 0;
+                    atkbutton = 0;
+                    atkreset = 1;
                 end
             end
             DODGE: begin
@@ -139,6 +144,8 @@ module Machine(
                 nextState = {ATTACK, ZERO};
                 atkstart = 1;
                 atkreset = 0;
+                atkbutton = 0;
+                playerInstruction = {ZERO, ZERO, ZERO, ZERO};
                 end
                 else if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
@@ -181,10 +188,10 @@ module Machine(
 //                end
                 
                 if(key === SPACE) begin
-                    nextState = {DODGE, ZERO};
+//                    nextState = {DODGE, ZERO};
                     atkbutton = 1;                     
-                     atkstart = 0;
-                     atkreset = 1;
+//                     atkstart = 0;
+//                     atkreset = 1;
                 end
                 if(atkPass === 1) begin
                     nextState = {DODGE, ZERO};
