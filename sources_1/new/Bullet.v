@@ -54,10 +54,10 @@ module Bullet(
     assign color2 = mem[index2][34:32];
     assign isRender2 = mem[index2][35];
     
-    always @(posedge clk, posedge isComplete)
+    always @(posedge clk)
     begin
         if(isRun === 1) begin
-            if(indexCollide) begin
+            if(indexCollide > 0) begin
                 mem[0][35] = indexCollide[0];
                 mem[1][35] = indexCollide[1];
                 mem[2][35] = indexCollide[2];
