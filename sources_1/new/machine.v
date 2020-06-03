@@ -116,10 +116,10 @@ module Machine(
             timer = timer + 1;
         end
         else timer = ZERO;
-//        if(page === ACTION) begin
-//            timer2 = timer2 + 1;
-//        end
-//        else timer2 = ZERO;
+        if(page === CHECK) begin
+            timer2 = timer2 + 1;
+        end
+        else timer2 = ZERO;
          if(page === MENU) begin
             timer3 = timer3 + 1;
         end
@@ -181,14 +181,30 @@ module Machine(
                     atkbutton = 0;
                 end
                 else if(key === K) begin
-                    nextState = {DODGE, ZERO};
-                    bulletIsRun = 1;
+                    nextState = {CHECK, ZERO};
                 end
                 if(key === L) begin
                     if(mercy === 1) nextState = {MENU, ZERO};
                     else begin
                     nextState = {DODGE, ZERO};
                     bulletIsRun = 1;
+                    end
+                end
+            end
+            CHECK: begin
+                if(timer2 >= 3) begin
+                    if(key === J) begin
+                        mercy = 1;
+                        nextState = {DODGE, ZERO};
+                        bulletIsRun = 1;
+                    end
+                    else if(key === K) begin
+                        nextState = {DODGE, ZERO};
+                        bulletIsRun = 1;
+                    end
+                    else if(key === L) begin
+                        nextState = {DODGE, ZERO};
+                        bulletIsRun = 1;
                     end
                 end
             end
