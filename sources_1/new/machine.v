@@ -101,9 +101,7 @@ module Machine(
         monHP = 0;
         isMove = 0;
         playerInstruction = {ZERO, ZERO, ZERO, ZERO};
-<<<<<<< HEAD
         startDmg = 0;
-=======
         timer = 0;
         timer2 = 0;
         timer3 = 0;
@@ -127,7 +125,6 @@ module Machine(
             timer3 = timer3 + 1;
         end
         else timer3 = ZERO;
->>>>>>> origin/phumSector
     end
     
     always @(posedge clk) begin
@@ -161,13 +158,8 @@ module Machine(
                          nextState = {MENU, ZERO};
                          bulletIsRun = 0;
                 end
-<<<<<<< HEAD
                 else if(isDmgComplete === 1) begin
                     if(heal === 1) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
-=======
-                else if(isDmgComplete===1) begin
-                    if(heal===1) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
->>>>>>> origin/phumSector
                     else if(damage >= 0) playerInstruction = {DPY, damage, ZERO};
                     startDmg = 1;
                 end else begin

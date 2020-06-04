@@ -32,13 +32,8 @@ module Bullet(
     input wire[2:0] index1, //for vga
     input wire[2:0] index2, //for damagecalculator and colision
     input wire isRun,
-<<<<<<< HEAD
     input wire isCollide,
     input clk
-=======
-    input clk,
-    input wire isCollide
->>>>>>> origin/phumSector
 
     );
     reg [35:0] mem [2:0];
@@ -60,26 +55,6 @@ module Bullet(
     
     always @(posedge clk, posedge isCollide)
     begin
-<<<<<<< HEAD
-        if(isRun) begin
-            if(isCollide == 1) mem[index2][35] = 0;
-            if(mem[0][7:0] >= 200) mem[0][7:0] = 8'b0000_0001; 
-            else mem[0][7:0] = mem[0][7:0] + 5;
-            if(mem[1][7:0] >= 200) mem[1][7:0] = 8'b0000_0001; 
-            else mem[1][7:0] = mem[1][7:0] + 5;
-            if(mem[2][7:0] >= 200) mem[2][7:0] = 8'b0000_0001; 
-            else mem[2][7:0] = mem[2][7:0] + 5;
-            if(mem[3][7:0] >= 200) mem[3][7:0] = 8'b0000_0001; 
-            else mem[3][7:0] = mem[3][7:0] + 5;
-            if(mem[4][7:0] >= 200) mem[4][7:0] = 8'b0000_0001; 
-            else mem[4][7:0] = mem[4][7:0] + 5;
-            if(mem[5][7:0] >= 200) mem[5][7:0] = 8'b0000_0001; 
-            else mem[5][7:0] = mem[5][7:0] + 5;
-            if(mem[6][7:0] >= 200) mem[6][7:0] = 8'b0000_0001; 
-            else mem[6][7:0] = mem[6][7:0] + 5;
-            if(mem[7][7:0] >= 200) mem[7][7:0] = 8'b0000_0001; 
-            else mem[7][7:0] = mem[7][7:0] + 5;
-=======
         if(isRun === 1) begin
             if(isCollide === 1) mem[index2][35] = 1'b0;
             else begin 
@@ -105,7 +80,6 @@ module Bullet(
             mem[0] = 36'b1_001_00010000_00010000_10100000_00010011;
             mem[1] = 36'b1_010_01100100_01100100_00111000_00010011;
             mem[2] = 36'b1_000_00010000_00010000_10000000_00010011;
->>>>>>> origin/phumSector
         end
         previous = index2;
     end
