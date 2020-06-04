@@ -37,7 +37,7 @@ wire [1:0] cl;
 wire [15:0] playerPos;
 wire [15:0] bulletPos;
 wire [2:0] bulletColor;
-wire [31:0] state = {8'b10010000,monHPrender,pHP,8'b00000000};
+wire [31:0] state = {mstate,monHPrender,pHP,atkGage};
 wire [7:0]monHPrender = 100-monHP; 
 wire isRender;
 wire [2:0] index;
@@ -46,7 +46,7 @@ vga_test vga(
     .isRender(isRender), 
     .playerPos(playerPos),
     .bulletPos(bulletPos),
-    .bulletColor(bulletColor[1:0]),
+    .bulletColor(bulletColor),
     .state(state),
     .hsync(Hsync),
     .vsync(Vsync),
@@ -66,10 +66,11 @@ wire [15:0] bulletPos2;
 wire [2:0] bulletColor2;
 wire isRender2;
 wire [2:0] index2;
-reg isRun = 1;
+wire isRun;
+wire [2:0] indexCollide;
+wire isComplete;
 
-Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun,clk_10hz);
-
+Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun, indexCollide, isComplete, clk_10hz);
 wire [15:0] playerInstruction;
 wire [31:0] pstate;
 wire [7:0] psize;
@@ -81,17 +82,29 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire [7:0] mstate;
     wire isMove;
     wire[7:0] monHP;
-    wire startDmg;
+    wire start = clk_20hz;
     wire[7:0] key;
     wire isDeath;
     wire atkPass;
     wire[7:0] dmgMon;
-    wire isDmgComplete;
     wire[7:0] damage;
     wire heal;
 
-Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkPass,dmgMon,isDmgComplete,damage,heal,clk);
+Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkpass,dmgMon,isComplete,damage,heal,clk, clk_1hz,atkstart,atkbutton,atkreset,bulletIsRun);
 
+DamageCalculator(damage,isComplete,index2,heal,indexCollide,isCollide,isRender2,isMove,bulletColor2,start,clk);
+
+CheckCollision(isCollide,playerPos[15:8],playerPos[7:0],psize,psize,bulletPos2[15:8],bulletPos2[7:0],bulletSize2[15:8],bulletSize2[7:0]);
+
+    wire [7:0] atkdamage;
+    wire [7:0] atkGage;
+    wire atkpass;
+    wire atkstart;
+    wire atkbutton;
+    wire atkreset;
+Attack a(dmgMon,atkGage,atkpass,atkstart,atkbutton,clk_10hz,atkreset);
+
+assign isRun = (mstate[7:4]===4'b1001)? 1:0;
 
 reg reset;
 always @(posedge clk_20hz)
