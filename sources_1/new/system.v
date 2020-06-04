@@ -41,6 +41,8 @@ wire [31:0] state = {mstate,monHPrender,pHP,atkGage};
 wire [7:0]monHPrender = 100-monHP; 
 wire isRender;
 wire [2:0] index;
+wire mercy;
+
 vga_test vga(
     .clk(clk),
     .isRender(isRender), 
@@ -52,7 +54,8 @@ vga_test vga(
     .vsync(Vsync),
     .rgb({vgaRed, vgaGreen, vgaBlue}),
     .index(index),
-    .clk2_10(clk2_10)
+    .clk2_10(clk2_10),
+    .mercy(mercy)
 );
 
 wire clk_1hz;
@@ -90,7 +93,7 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire[7:0] damage;
     wire heal;
 
-Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkpass,dmgMon,isComplete,damage,heal,clk, clk_1hz,atkstart,atkbutton,atkreset,bulletIsRun);
+Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkpass,dmgMon,isComplete,damage,heal,clk, clk_1hz,atkstart,atkbutton,atkreset, mercy);
 
 DamageCalculator(damage,isComplete,index2,heal,indexCollide,isCollide,isRender2,isMove,bulletColor2,start,clk);
 

@@ -38,7 +38,7 @@ module Machine(
     output reg atkstart,
     output reg atkbutton,
     output reg atkreset,
-    output reg bulletIsRun
+    output reg mercy
     );
     
     parameter ZERO = 4'b0000; // for IDLE
@@ -88,7 +88,6 @@ module Machine(
     reg[3:0] timer2;
     reg[3:0] timer3;
     
-    reg mercy;
     
     wire [3:0] key; 
     keyConverter kc(key,keyboard,clk);
@@ -109,7 +108,6 @@ module Machine(
         atkbutton = 0;
         atkreset = 1;
         mercy = 0;
-        bulletIsRun = 0;
     end
     
     always @(posedge clk_1hz) begin
@@ -145,18 +143,15 @@ module Machine(
                     atkbutton = 0;
                     atkreset = 1;
                     mercy= 0;
-                    bulletIsRun = 1;
                 end
             end
             DODGE: begin
                 if(timer >= DODGE_TIME) begin
                 nextState = {ACTION, ZERO};
                 playerInstruction = {ZERO, ZERO, ZERO, ZERO};
-                bulletIsRun = 0;
                 end
                 else if(isDeath === 1) begin
                          nextState = {MENU, ZERO};
-                         bulletIsRun = 0;
                 end
                 else if(isDmgComplete === 1) begin
                     if(heal === 1) playerInstruction = {HPY, 8'b0000_1010, ZERO}; 
@@ -188,7 +183,6 @@ module Machine(
                     if(mercy === 1) nextState = {MENU, ZERO};
                     else begin
                     nextState = {DODGE, ZERO};
-                    bulletIsRun = 1;
                     end
                 end
             end
@@ -197,15 +191,12 @@ module Machine(
                     if(key === J) begin
                         mercy = 1;
                         nextState = {DODGE, ZERO};
-                        bulletIsRun = 1;
                     end
                     else if(key === K) begin
                         nextState = {DODGE, ZERO};
-                        bulletIsRun = 1;
                     end
                     else if(key === L) begin
                         nextState = {DODGE, ZERO};
-                        bulletIsRun = 1;
                     end
                 end
             end
@@ -240,7 +231,6 @@ module Machine(
                     end
                     else begin
                         nextState = {DODGE, ZERO};
-                        bulletIsRun = 1;
                     end
                     atkstart = 0;
                      atkreset = 1;
