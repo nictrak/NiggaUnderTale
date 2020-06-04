@@ -137,6 +137,8 @@ module vga_test
 	parameter BLUE = 50;
 	parameter SLIDE = 300;
 	parameter LOGO = 130;
+	parameter cX = 405;
+	parameter cY = 215;
 		
 	// register for Basys 2 8-bit RGB DAC 
 	reg [11:0] rgb_reg;
@@ -241,6 +243,9 @@ module vga_test
                             3'b111: begin rgb_reg = 12'b111111111111; end
                         endcase
                     else rgb_reg <= 12'b000000000000;
+                    if(mercy==1)
+                        if(((x-cX)*(x-cX)+(y-cY)*(y-cY)) <= 25)
+                            rgb_reg <= 12'b111111110100;
                 end
             else if(state[31:28]==4'b1001)
                 begin
