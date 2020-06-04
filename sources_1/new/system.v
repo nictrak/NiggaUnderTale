@@ -66,9 +66,17 @@ wire [15:0] bulletPos2;
 wire [2:0] bulletColor2;
 wire isRender2;
 wire [2:0] index2;
+<<<<<<< HEAD
 wire bulletIsRun;
 
 Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,bulletIsRun,clk_10hz,isCollide);
+=======
+reg isRun = 1;
+wire [2:0] indexCollide;
+wire isComplete;
+
+Bullet b(bulletPos,bulletSize,bulletColor,isRender,bulletPos2,bulletSize2,bulletColor2,isRender2,index,index2,isRun, indexCollide, isComplete, clk_10hz);
+>>>>>>> machine
 
 wire [15:0] playerInstruction;
 wire [31:0] pstate;
@@ -88,11 +96,10 @@ Player p(pstate,playerPos,psize,isDeath,pHP,pATK,playerInstruction,clk,clk_10hz)
     wire[7:0] dmgMon;
     wire[7:0] damage;
     wire heal;
-    wire isComplete;
 
 Machine m(mstate,playerInstruction,isMove,monHP,startDmg,key,isDeath,atkpass,dmgMon,isComplete,damage,heal,clk, clk_1hz,atkstart,atkbutton,atkreset,bulletIsRun);
 
-DamageCalculator(damage,isComplete,index2,heal,isCollide,isRender2,isMove,bulletColor2,start,clk);
+DamageCalculator(damage,isComplete,index2,heal,indexCollide,isCollide,isRender2,isMove,bulletColor2,start,clk);
 
 CheckCollision(isCollide,playerPos[15:8],playerPos[7:0],psize,psize,bulletPos2[15:8],bulletPos2[7:0],bulletSize2[15:8],bulletSize2[7:0]);
 
