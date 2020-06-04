@@ -120,6 +120,7 @@ module vga_test
 		input wire [15:0] bulletPos,
 		input wire [1:0] bulletColor,
 		input wire [31:0] state,
+		input wire mercy,
 		output wire hsync, vsync,
 		output wire [11:0] rgb,
 		output reg [2:0] index,
